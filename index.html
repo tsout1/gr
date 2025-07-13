@@ -20,19 +20,25 @@
             100% { background-position: 0% 50%; }
         }
         .light {
-            background: linear-gradient(135deg, #1e3a8a, #4f46e5, #7e22ce);
+            background: linear-gradient(135deg, #e6f0fa, #b3c0e7, #d4a9d0);
             background-size: 200% 200%;
+            color: #1a202c;
         }
         .dark {
-            background: linear-gradient(135deg, #111827, #374151, #1f2937);
+            background: linear-gradient(135deg, #1a202c, #2d3748, #4a5568);
             background-size: 200% 200%;
+            color: #e2e8f0;
         }
         .card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .dark .card {
+            background-color: rgba(30, 32, 44, 0.9);
         }
         .card:hover {
-            transform: translateY(-6px) scale(1.02);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
         }
         .progress-bar {
             transition: width 1s linear;
@@ -52,10 +58,15 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: #7289da;
+            border-radius: 8px;
+        }
+        .dark .discord-btn, .dark #startBypass {
+            background-color: #5b6eae;
         }
         .discord-btn:hover, #startBypass:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            transform: scale(1.07);
+            box-shadow: 0 0 20px rgba(114, 137, 218, 0.6);
         }
         .discord-btn::after, #startBypass::after {
             content: '';
@@ -64,23 +75,30 @@
             left: 50%;
             width: 0;
             height: 0;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             transition: width 0.6s ease, height 0.6s ease;
         }
         .discord-btn:hover::after, #startBypass:hover::after {
-            width: 200%;
-            height: 200%;
+            width: 250%;
+            height: 250%;
         }
-        .dark .discord-btn {
-            background-color: #7289DA;
+        #themeToggle {
+            background-color: #edf2f7;
+            border-radius: 8px;
         }
-        .dark .discord-btn:hover {
-            background-color: #5B6EAE;
+        .dark #themeToggle {
+            background-color: #4a5568;
+        }
+        #themeToggle:hover {
+            background-color: #d1d5db;
+        }
+        .dark #themeToggle:hover {
+            background-color: #718096;
         }
         .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
+            border: 4px solid rgba(255, 255, 255, 0.4);
             border-top: 4px solid #ffffff;
             border-radius: 50%;
             width: 24px;
@@ -95,14 +113,14 @@
         }
     </style>
 </head>
-<body class="font-sans text-gray-800 light">
+<body class="font-sans light">
     <div class="container mx-auto p-6 max-w-3xl">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-4xl font-extrabold text-white drop-shadow-lg">
                 <i class="fas fa-rocket mr-2"></i> Bypass YeuMoney
             </h1>
             <div class="flex space-x-2">
-                <button id="themeToggle" class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white font-bold py-2 px-4 rounded">
+                <button id="themeToggle" class="text-gray-800 dark:text-white font-bold py-2 px-4 rounded">
                     <i class="fas fa-moon mr-2"></i> Chế độ tối
                 </button>
                 <a href="https://discord.gg/2NpBPjM4PF" target="_blank" class="discord-btn text-white font-bold py-2 px-4 rounded flex items-center">
@@ -146,33 +164,28 @@
             e.preventDefault();
         });
 
-        // Phát hiện DevTools cải tiến
+        // Phát hiện DevTools
         const detectDevTools = () => {
-            // Kiểm tra kích thước cửa sổ với ngưỡng cao hơn
             const threshold = 200;
             const widthDiff = window.outerWidth - window.innerWidth;
             const heightDiff = window.outerHeight - window.innerHeight;
             const screenDiff = (window.screen.width - window.innerWidth > 150) || 
                              (window.screen.height - window.innerHeight > 150);
 
-            // Kiểm tra debugger với điều kiện hiệu suất
             let debuggerPresent = false;
             const startTime = performance.now();
-            for (let i = 0; i < 1000000; i++); // Mô phỏng công việc
+            for (let i = 0; i < 1000000; i++); 
             const endTime = performance.now();
-            // Chỉ xem là debugger nếu thời gian vượt quá 50ms và không do hiệu suất hệ thống
             if (endTime - startTime > 50 && !navigator.userAgent.includes('Mobile')) debuggerPresent = true;
 
-            // Kiểm tra nếu DevTools được phát hiện
             if (widthDiff > threshold || heightDiff > threshold || screenDiff || debuggerPresent) {
                 alert('Phát hiện DevTools! Vui lòng đóng để tiếp tục!');
                 window.location.reload();
-            } else if (widthDiff > 50 || heightDiff > 50) { // Cảnh báo tạm thời nếu có sự khác biệt nhỏ
+            } else if (widthDiff > 50 || heightDiff > 50) {
                 alert('Có thể phát hiện nhầm DevTools. Hãy kiểm tra và xác nhận bạn không mở DevTools!');
             }
         };
 
-        // Chạy kiểm tra mỗi 100ms
         setInterval(detectDevTools, 100);
 
         // URL webhook và danh sách các trang
@@ -192,6 +205,9 @@
         const resultsDiv = document.getElementById('results');
         const siteCheckboxesDiv = document.getElementById('siteCheckboxes');
         const themeToggle = document.getElementById('themeToggle');
+
+        // Khởi tạo hoặc lấy số lần bypass từ localStorage
+        let bypassCount = parseInt(localStorage.getItem('bypassCount')) || 0;
 
         // Chuyển đổi giao diện sáng/tối
         if (localStorage.getItem('theme') === 'dark') {
@@ -218,7 +234,7 @@
             siteCheckboxesDiv.appendChild(div);
         });
 
-        // Gửi webhook
+        // Gửi webhook với số lần bypass
         async function sendWebhook(site, code) {
             if (!WEBHOOK_URL) return;
             try {
@@ -229,7 +245,7 @@
                         content: null,
                         embeds: [{
                             title: '🟢 Bypass Thành Công',
-                            description: `**Site:** ${site.toUpperCase()}\n**Mã:** \`${code}\`\n**Thời gian:** ${new Date().toLocaleString('vi-VN')}`,
+                            description: `**Site:** ${site.toUpperCase()}\n**Mã:** \`${code}\`\n**Thời gian:** ${new Date().toLocaleString('vi-VN')}\n**Số lần bypass:** ${bypassCount + 1}`,
                             color: 0x00FF00,
                             timestamp: new Date().toISOString()
                         }]
@@ -282,7 +298,7 @@
                     const response = await fetch(urls[site].url, { method: 'POST' });
                     const html = await response.text();
                     const match = html.match(/<span id="layma_me_vuatraffic"[^>]*>\s*(\d+)\s*<\/span>/);
-                    await new Promise(resolve => setTimeout(resolve, 75000)); // Chờ 75 giây
+                    await new Promise(resolve => setTimeout(resolve, 75000));
                     clearInterval(timerInterval);
                     timerSpan.textContent = '0s';
                     progressBar.style.width = '100%';
@@ -297,6 +313,8 @@
                                 </button>
                             </div>
                         `;
+                        bypassCount++;
+                        localStorage.setItem('bypassCount', bypassCount);
                         await sendWebhook(site, match[1]);
                     } else {
                         resultDiv.innerHTML = `
