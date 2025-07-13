@@ -1,53 +1,32 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://tse3.mm.bing.net/th/id/OIP.-pmFs3faKPQ6beJQMlzNDAHaEY?pid=Api&P=0&h=220">
     <title>Bypass YeuMoney</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             min-height: 100vh;
-            transition: background 0.5s ease;
-            animation: gradientShift 15s ease infinite;
-            opacity: 0;
-            animation: fadeInPage 1s ease-in forwards;
-            overflow: hidden;
-            will-change: background;
-        }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            transition: background 0.3s;
         }
         .light {
-            background: linear-gradient(135deg, #e6f0fa, #b3c0e7, #d4a9d0);
-            background-size: 200% 200%;
-            color: #1a202c;
+            background: linear-gradient(135deg, #1e3a8a, #4f46e5);
         }
         .dark {
-            background: linear-gradient(135deg, #1a202c, #2d3748, #4a5568);
-            background-size: 200% 200%;
-            color: #e2e8f0;
+            background: linear-gradient(135deg, #111827, #374151);
         }
         .card {
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
-            will-change: transform, box-shadow;
-        }
-        .dark .card {
-            background: rgba(30, 32, 44, 0.95);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         .card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.25), 0 0 15px rgba(255, 255, 255, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
         }
         .progress-bar {
-            transition: width 1s ease-in-out;
-            background: linear-gradient(90deg, #4c51bf, #a3bffa);
-            will-change: width;
+            transition: width 1s linear;
         }
         .fade-in {
             animation: fadeIn 0.5s ease-in;
@@ -56,187 +35,91 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes fadeInPage {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .discord-btn {
+            background-color: #5865F2;
+            transition: background-color 0.3s;
         }
-        .discord-btn, #startBypass {
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-            background: linear-gradient(45deg, #7289da, #5b6eae);
-            border-radius: 10px;
-            padding: 12px 24px;
-            will-change: transform, box-shadow;
+        .discord-btn:hover {
+            background-color: #4752C4;
         }
-        .dark .discord-btn, .dark #startBypass {
-            background: linear-gradient(45deg, #5b6eae, #4a5568);
+        .dark .discord-btn {
+            background-color: #7289DA;
         }
-        .discord-btn:hover, #startBypass:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 25px rgba(114, 137, 218, 0.8), 0 0 15px rgba(255, 255, 255, 0.3);
-        }
-        .discord-btn::after, #startBypass::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s ease, height 0.6s ease;
-            z-index: 1;
-            will-change: width, height;
-        }
-        .discord-btn:hover::after, #startBypass:hover::after {
-            width: 300%;
-            height: 300%;
-        }
-        #themeToggle {
-            background: linear-gradient(45deg, #edf2f7, #d1d5db);
-            border-radius: 10px;
-            padding: 10px 20px;
-            transition: background 0.4s ease;
-            will-change: background;
-        }
-        .dark #themeToggle {
-            background: linear-gradient(45deg, #4a5568, #718096);
-        }
-        #themeToggle:hover {
-            background: linear-gradient(45deg, #d1d5db, #a0aec0);
-        }
-        .dark #themeToggle:hover {
-            background: linear-gradient(45deg, #718096, #90a4ae);
-        }
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.5);
-            border-top: 4px solid #a3bffa;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-            margin-right: 10px;
-            will-change: transform;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        h1 {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.2);
-            background: linear-gradient(90deg, #ffffff, #d4a9d0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            will-change: background;
+        .dark .discord-btn:hover {
+            background-color: #5B6EAE;
         }
     </style>
 </head>
-<body class="font-sans light relative">
-    <canvas id="particleCanvas"></canvas>
-    <div class="container mx-auto p-6 max-w-3xl relative z-10">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-5xl font-extrabold text-white drop-shadow-lg">
-                <i class="fas fa-rocket mr-3"></i> Bypass YeuMoney
+<body class="font-sans text-gray-800 light">
+    <div class="container mx-auto p-6 max-w-3xl">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-4xl font-extrabold text-white drop-shadow-lg">
+                <i class="fas fa-rocket mr-2"></i> Bypass YeuMoney
             </h1>
-            <div class="flex space-x-3">
-                <button id="themeToggle" class="text-gray-800 dark:text-white font-bold py-2 px-4 rounded-lg">
+            <div class="flex space-x-2">
+                <button id="themeToggle" class="bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white font-bold py-2 px-4 rounded">
                     <i class="fas fa-moon mr-2"></i> Chế độ tối
                 </button>
-                <a href="https://discord.gg/2NpBPjM4PF" target="_blank" class="discord-btn text-white font-bold py-2 px-4 rounded-lg flex items-center">
-                    <i class="fab fa-discord mr-2"></i> Tham gia Discord
+                <a href="https://discord.gg/2NpBPjM4PF" target="_blank" class="discord-btn text-white font-bold py-2 px-4 rounded flex items-center">
+                    <i class="fab fa-discord mr-2"></i> Join Discord
                 </a>
             </div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 mb-8">
-            <h2 class="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Chọn Nghiệm Vụ</h2>
-            <div id="siteCheckboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-6 mb-8"></div>
-            <button id="startBypass" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-lg transition-colors flex items-center justify-center">
-                <i class="fas fa-play mr-2"></i> Bắt Đầu Bypass
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Chọn Nghiệm Vụ</h2>
+            <div id="siteCheckboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6"></div>
+            <button id="startBypass" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition-colors">
+                <i class="fas fa-play mr-2"></i> Start Bypass
             </button>
         </div>
-        <div id="status" class="text-white text-xl mb-6 text-center"></div>
-        <div id="results" class="space-y-6"></div>
+        <div id="status" class="text-white text-lg mb-4 text-center"></div>
+        <div id="results" class="space-y-4"></div>
     </div>
 
     <script>
-        // Kiểm tra DOM trước khi sử dụng
-        function getElementSafe(id) {
-            const el = document.getElementById(id);
-            if (!el) console.error(`Element with id ${id} not found`);
-            return el;
-        }
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-        // Vô hiệu hóa nhấp chuột phải
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            alert('Tính năng này đã bị vô hiệu hóa!');
-        });
-
-        // Vô hiệu hóa các phím tắt phổ biến
         document.addEventListener('keydown', (e) => {
             if (
                 e.key === 'F12' ||
                 (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
-                (e.ctrlKey && e.key === 'U') ||
-                (e.ctrlKey && (e.key === 'C' || e.key === 'V'))
+                (e.ctrlKey && e.key === 'U')
             ) {
                 e.preventDefault();
-                alert('Hành động này bị chặn!');
             }
         });
 
-        // Vô hiệu hóa chọn văn bản
-        document.addEventListener('selectstart', (e) => {
-            e.preventDefault();
-        });
-
-        // Phát hiện DevTools tối ưu
-        let devToolsCheckTimeout;
-        function detectDevTools() {
-            clearTimeout(devToolsCheckTimeout);
-            const threshold = 250;
+        // Phát hiện và đóng DevTools
+        const devToolsDetector = () => {
+            const threshold = 160;
             const widthDiff = window.outerWidth - window.innerWidth;
             const heightDiff = window.outerHeight - window.innerHeight;
-            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-
             if (widthDiff > threshold || heightDiff > threshold) {
-                if (!isMobile) {
-                    alert('Phát hiện DevTools! Vui lòng đóng để tiếp tục!');
-                    window.location.reload();
-                }
-            } else if (widthDiff > 100 || heightDiff > 100) {
-                alert('Có thể phát hiện nhầm DevTools. Hãy kiểm tra và xác nhận bạn không mở DevTools!');
+                alert('Vui lòng đóng DevTools để tiếp tục sử dụng!');
+                window.location.reload();
             }
-            devToolsCheckTimeout = setTimeout(detectDevTools, 500); // Giảm tần suất kiểm tra
-        }
-        detectDevTools();
-
-        // URL webhook và danh sách các trang
-        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1380090512492728361/rlm3jJOs5eCGUXZAoqOpzIKAjuypOQbnVN8Jnzhb59FQvPVdEz1WnZbT16_ptuRPs7CE';
-        const urls = {
-            "m88": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://bet88ec.com/cach-danh-bai-sam-loc&loai_traffic=https://bet88ec.com/&clk=1000" },
-            "fb88": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://fb88mg.com/ty-le-cuoc-hong-kong-la-gi&loai_traffic=https://fb88mg.com/&clk=1000" },
-            "188bet": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrailamnhe&url=https://88betag.com/cach-choi-game-bai-pok-deng&loai_traffic=https://88betag.com/&clk=1000" },
-            "w88": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://188.166.185.213/tim-hieu-khai-niem-3-bet-trong-poker-la-gi&loai_traffic=https://188.166.185.213/&clk=1000" },
-            "v9bet": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://v9betse.com/ca-cuoc-dua-cho&loai_traffic=https://v9betse.com/&clk=1000" },
-            "vn88": { url: "https://traffic-user.net/GET_MA.php?codexn=bomaydeptrai&url=https://vn88no.com/keo-chap-1-trai-la-gi&loai_traffic=https://vn88no.com/&clk=1000" },
-            "bk8": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://bk8ze.com/cach-choi-bai-catte&loai_traffic=https://bk8ze.com/&clk=1000" },
         };
 
-        const startButton = getElementSafe('startBypass');
-        const statusDiv = getElementSafe('status');
-        const resultsDiv = getElementSafe('results');
-        const siteCheckboxesDiv = getElementSafe('siteCheckboxes');
-        const themeToggle = getElementSafe('themeToggle');
+        setInterval(devToolsDetector, 1000);
 
-        // Khởi tạo hoặc lấy số lần bypass từ localStorage
-        let bypassCount = parseInt(localStorage.getItem('bypassCount')) || 0;
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1380090512492728361/rlm3jJOs5eCGUXZAoqOpzIKAjuypOQbnVN8Jnzhb59FQvPVdEz1WnZbT16_ptuRPs7CE';
 
-        // Chuyển đổi giao diện sáng/tối
+        const urls = {
+            "m88": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://bet88ec.com/cach-danh-bai-sam-loc&loai_traffic=https://bet88ec.com/&clk=1000", icon: "fas fa-dice" },
+            "fb88": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://fb88mg.com/ty-le-cuoc-hong-kong-la-gi&loai_traffic=https://fb88mg.com/&clk=1000", icon: "fas fa-football-ball" },
+            "188bet": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrailamnhe&url=https://88betag.com/cach-choi-game-bai-pok-deng&loai_traffic=https://88betag.com/&clk=1000", icon: "fas fa-cards" },
+            "w88": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://188.166.185.213/tim-hieu-khai-niem-3-bet-trong-poker-la-gi&loai_traffic=https://188.166.185.213/&clk=1000", icon: "fas fa-poker-chip" },
+            "v9bet": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://v9betse.com/ca-cuoc-dua-cho&loai_traffic=https://v9betse.com/&clk=1000", icon: "fas fa-dog" },
+            "vn88": { url: "https://traffic-user.net/GET_MA.php?codexn=bomaydeptrai&url=https://vn88no.com/keo-chap-1-trai-la-gi&loai_traffic=https://vn88no.com/&clk=1000", icon: "fas fa-futbol" },
+            "bk8": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://bk8ze.com/cach-choi-bai-catte&loai_traffic=https://bk8ze.com/&clk=1000", icon: "fas fa-gamepad" },
+        };
+
+        const startButton = document.getElementById('startBypass');
+        const statusDiv = document.getElementById('status');
+        const resultsDiv = document.getElementById('results');
+        const siteCheckboxesDiv = document.getElementById('siteCheckboxes');
+        const themeToggle = document.getElementById('themeToggle');
+
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.remove('light');
             document.body.classList.add('dark');
@@ -248,23 +131,21 @@
             const isDark = document.body.classList.contains('dark');
             themeToggle.innerHTML = isDark ? '<i class="fas fa-sun mr-2"></i> Chế độ sáng' : '<i class="fas fa-moon mr-2"></i> Chế độ tối';
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            particlesArray.forEach(p => p.color = isDark ? '#a3bffa' : '#d4a9d0');
         });
 
-        // Tạo danh sách checkbox cho các trang
         Object.entries(urls).forEach(([site, data]) => {
             const div = document.createElement('div');
-            div.className = 'flex items-center p-3 bg-gray-100 dark:bg-gray-700 rounded-xl card';
+            div.className = 'flex items-center p-2 bg-gray-100 dark:bg-gray-700 rounded card';
             div.innerHTML = `
-                <input type="checkbox" id="${site}" value="${site}" class="mr-3 h-6 w-6">
-                <label for="${site}" class="flex items-center text-lg text-gray-800 dark:text-gray-100">${site.toUpperCase()}</label>
+                <input type="checkbox" id="${site}" value="${site}" class="mr-2 h-5 w-5">
+                <label for="${site}" class="flex items-center text-gray-800 dark:text-gray-100"><i class="${data.icon} mr-2"></i>${site.toUpperCase()}</label>
             `;
             siteCheckboxesDiv.appendChild(div);
         });
 
-        // Gửi webhook với số lần bypass
         async function sendWebhook(site, code) {
             if (!WEBHOOK_URL) return;
+
             try {
                 await fetch(WEBHOOK_URL, {
                     method: 'POST',
@@ -273,7 +154,7 @@
                         content: null,
                         embeds: [{
                             title: '🟢 Bypass Thành Công',
-                            description: `**Site:** ${site.toUpperCase()}\n**Mã:** \`${code}\`\n**Thời gian:** ${new Date().toLocaleString('vi-VN')}\n**Số lần bypass:** ${bypassCount + 1}`,
+                            description: `**Site:** ${site.toUpperCase()}\n**Mã:** \`${code}\`\n**Thời gian:** ${new Date().toLocaleString('vi-VN')}`,
                             color: 0x00FF00,
                             timestamp: new Date().toISOString()
                         }]
@@ -284,196 +165,97 @@
             }
         }
 
-        // Quá trình bypass
         async function startBypass() {
             const selectedSites = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
             if (selectedSites.length === 0) {
-                if (statusDiv) {
-                    statusDiv.textContent = 'Vui lòng chọn ít nhất một nghiệm vụ!';
-                    statusDiv.className = 'text-red-400 text-xl mb-6 text-center fade-in';
-                }
+                statusDiv.textContent = 'Vui lòng chọn ít nhất một nghiệm vụ!';
+                statusDiv.className = 'text-red-400 text-lg mb-4 text-center fade-in';
                 return;
             }
 
-            if (startButton) {
-                startButton.disabled = true;
-                startButton.innerHTML = '<span class="spinner"></span> Đang xử lý...';
-            }
-            if (statusDiv) {
-                statusDiv.textContent = 'Đang bắt đầu bypass...';
-                statusDiv.className = 'text-white text-xl mb-6 text-center fade-in';
-            }
-            if (resultsDiv) resultsDiv.innerHTML = '';
+            startButton.disabled = true;
+            startButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
+            statusDiv.textContent = 'Starting bypass...';
+            statusDiv.className = 'text-white text-lg mb-4 text-center fade-in';
+            resultsDiv.innerHTML = '';
 
             for (const site of selectedSites) {
                 const resultDiv = document.createElement('div');
-                resultDiv.className = 'p-5 bg-white dark:bg-gray-800 rounded-xl shadow-2xl card fade-in';
+                resultDiv.className = 'p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg card fade-in';
                 resultDiv.innerHTML = `
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
-                    <p class="text-lg text-gray-600 dark:text-gray-300">Đang xử lý...</p>
-                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3 mt-3">
-                        <div id="progress-${site}" class="progress-bar h-3 rounded-full" style="width: 0%"></div>
+                    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100"><i class="${urls[site].icon} mr-2"></i>${site.toUpperCase()}</h2>
+                    <p class="text-gray-600 dark:text-gray-300">Processing...</p>
+                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5 mt-2">
+                        <div id="progress-${site}" class="progress-bar bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
                     </div>
-                    <p class="text-base text-gray-500 dark:text-gray-400 mt-2">Thời gian còn lại: <span id="timer-${site}">75s</span></p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Time remaining: <span id="timer-${site}">75s</span></p>
                 `;
-                if (resultsDiv) resultsDiv.appendChild(resultDiv);
+                resultsDiv.appendChild(resultDiv);
 
                 let timeLeft = 75;
                 const timerSpan = document.getElementById(`timer-${site}`);
                 const progressBar = document.getElementById(`progress-${site}`);
-                if (timerSpan && progressBar) {
-                    const timerInterval = setInterval(() => {
-                        timeLeft--;
-                        timerSpan.textContent = `${timeLeft}s`;
-                        progressBar.style.width = `${((75 - timeLeft) / 75) * 100}%`;
-                        if (timeLeft <= 0) clearInterval(timerInterval);
-                    }, 1000);
-                }
+                const timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerSpan.textContent = `${timeLeft}s`;
+                    progressBar.style.width = `${((75 - timeLeft) / 75) * 100}%`;
+                    if (timeLeft <= 0) clearInterval(timerInterval);
+                }, 1000);
 
                 try {
-                    const response = await fetch(urls[site].url, { method: 'POST', timeout: 30000 });
+                    const response = await fetch(urls[site].url, { method: 'POST' });
                     const html = await response.text();
-                    await new Promise(resolve => setTimeout(resolve, 75000));
                     const match = html.match(/<span id="layma_me_vuatraffic"[^>]*>\s*(\d+)\s*<\/span>/);
-
-                    if (timerSpan && progressBar) {
-                        clearInterval(window[`timerInterval_${site}`]);
-                        timerSpan.textContent = '0s';
-                        progressBar.style.width = '100%';
-                    }
+                    await new Promise(resolve => setTimeout(resolve, 75000)); // Wait 75 seconds
+                    clearInterval(timerInterval);
+                    timerSpan.textContent = '0s';
+                    progressBar.style.width = '100%';
 
                     if (match) {
                         resultDiv.innerHTML = `
-                            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
+                            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100"><i class="${urls[site].icon} mr-2"></i>${site.toUpperCase()}</h2>
                             <div class="flex items-center">
-                                <p class="text-xl text-green-600 dark:text-green-400"><i class="fas fa-check-circle mr-2"></i>Mã: ${match[1]}</p>
-                                <button class="ml-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white py-2 px-3 rounded-lg copy-btn" data-code="${match[1]}">
-                                    <i class="fas fa-copy mr-1"></i>Sao chép
+                                <p class="text-green-600 dark:text-green-400"><i class="fas fa-check-circle mr-2"></i>Code: ${match[1]}</p>
+                                <button class="ml-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white py-1 px-2 rounded copy-btn" data-code="${match[1]}">
+                                    <i class="fas fa-copy mr-1"></i>Copy
                                 </button>
                             </div>
                         `;
-                        bypassCount++;
-                        localStorage.setItem('bypassCount', bypassCount);
                         await sendWebhook(site, match[1]);
                     } else {
                         resultDiv.innerHTML = `
-                            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
-                            <p class="text-xl text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Không tìm thấy mã. Liên kết có thể bị hỏng.</p>
+                            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100"><i class="${urls[site].icon} mr-2"></i>${site.toUpperCase()}</h2>
+                            <p class="text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>No code found. Link may be broken.</p>
                         `;
                     }
                 } catch (error) {
-                    if (timerSpan && progressBar) {
-                        clearInterval(window[`timerInterval_${site}`]);
-                        timerSpan.textContent = '0s';
-                        progressBar.style.width = '100%';
-                    }
+                    clearInterval(timerInterval);
+                    timerSpan.textContent = '0s';
+                    progressBar.style.width = '100%';
                     resultDiv.innerHTML = `
-                        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
-                        <p class="text-xl text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Lỗi: ${error.message}</p>
+                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100"><i class="${urls[site].icon} mr-2"></i>${site.toUpperCase()}</h2>
+                        <p class="text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Error: ${error.message}</p>
                     `;
                 }
             }
 
-            if (startButton) {
-                startButton.disabled = false;
-                startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Bắt Đầu Bypass';
-            }
-            if (statusDiv) {
-                statusDiv.textContent = 'Bypass hoàn tất! Số lần: ' + (bypassCount + 1);
-                statusDiv.className = 'text-green-400 text-xl mb-6 text-center fade-in';
-            }
+            startButton.disabled = false;
+            startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Start Bypass';
+            statusDiv.textContent = 'Bypass completed!';
+            statusDiv.className = 'text-green-400 text-lg mb-4 text-center fade-in';
 
-            if (resultsDiv) {
-                document.querySelectorAll('.copy-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        navigator.clipboard.writeText(btn.dataset.code);
-                        btn.innerHTML = '<i class="fas fa-check mr-1"></i>Đã sao chép!';
-                        setTimeout(() => {
-                            btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Sao chép';
-                        }, 2000);
-                    });
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    navigator.clipboard.writeText(btn.dataset.code);
+                    btn.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                    setTimeout(() => {
+                        btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy';
+                    }, 2000);
                 });
-            }
+            });
         }
 
-        if (startButton) startButton.addEventListener('click', startBypass);
-
-        // Hiệu ứng particle nền
-        const canvas = getElementSafe('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        let particlesArray = [];
-        const numberOfParticles = 30;
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-                this.color = document.body.classList.contains('dark') ? '#a3bffa' : '#d4a9d0';
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x < 0 || this.x > canvas.width) this.speedX = -this.speedX;
-                if (this.y < 0 || this.y > canvas.height) this.speedY = -this.speedY;
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        function init() {
-            try {
-                particlesArray = [];
-                for (let i = 0; i < numberOfParticles; i++) {
-                    particlesArray.push(new Particle());
-                }
-            } catch (e) {
-                console.error('Error initializing particles:', e);
-            }
-        }
-
-        function animate() {
-            try {
-                if (!ctx) return;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < particlesArray.length; i++) {
-                    particlesArray[i].update();
-                    particlesArray[i].draw();
-                }
-                requestAnimationFrame(animate);
-            } catch (e) {
-                console.error('Animation error:', e);
-            }
-        }
-
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            init();
-        }
-
-        window.addEventListener('resize', debounce(resizeCanvas, 100));
-        document.body.addEventListener('click', init);
-        resizeCanvas();
-        animate();
+        startButton.addEventListener('click', startBypass);
     </script>
 </body>
 </html>
