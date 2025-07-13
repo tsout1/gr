@@ -13,6 +13,7 @@
             animation: gradientShift 15s ease infinite;
             opacity: 0;
             animation: fadeInPage 1s ease-in forwards;
+            overflow: hidden;
         }
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
@@ -31,17 +32,19 @@
         }
         .card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
         }
         .dark .card {
-            background-color: rgba(30, 32, 44, 0.9);
+            background: rgba(30, 32, 44, 0.95);
         }
         .card:hover {
-            transform: translateY(-8px) scale(1.03);
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.25), 0 0 15px rgba(255, 255, 255, 0.1);
         }
         .progress-bar {
             transition: width 1s linear;
+            background: linear-gradient(90deg, #4c51bf, #a3bffa);
         }
         .fade-in {
             animation: fadeIn 0.5s ease-in;
@@ -58,15 +61,16 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: #7289da;
-            border-radius: 8px;
+            background: linear-gradient(45deg, #7289da, #5b6eae);
+            border-radius: 10px;
+            padding: 12px 24px;
         }
         .dark .discord-btn, .dark #startBypass {
-            background-color: #5b6eae;
+            background: linear-gradient(45deg, #5b6eae, #4a5568);
         }
         .discord-btn:hover, #startBypass:hover {
-            transform: scale(1.07);
-            box-shadow: 0 0 20px rgba(114, 137, 218, 0.6);
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(114, 137, 218, 0.8), 0 0 15px rgba(255, 255, 255, 0.3);
         }
         .discord-btn::after, #startBypass::after {
             content: '';
@@ -75,68 +79,78 @@
             left: 50%;
             width: 0;
             height: 0;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.4);
             border-radius: 50%;
             transform: translate(-50%, -50%);
             transition: width 0.6s ease, height 0.6s ease;
+            z-index: 1;
         }
         .discord-btn:hover::after, #startBypass:hover::after {
-            width: 250%;
-            height: 250%;
+            width: 300%;
+            height: 300%;
         }
         #themeToggle {
-            background-color: #edf2f7;
-            border-radius: 8px;
+            background: linear-gradient(45deg, #edf2f7, #d1d5db);
+            border-radius: 10px;
+            padding: 10px 20px;
         }
         .dark #themeToggle {
-            background-color: #4a5568;
+            background: linear-gradient(45deg, #4a5568, #718096);
         }
         #themeToggle:hover {
-            background-color: #d1d5db;
+            background: linear-gradient(45deg, #d1d5db, #a0aec0);
         }
         .dark #themeToggle:hover {
-            background-color: #718096;
+            background: linear-gradient(45deg, #718096, #90a4ae);
         }
         .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.4);
-            border-top: 4px solid #ffffff;
+            border: 4px solid rgba(255, 255, 255, 0.5);
+            border-top: 4px solid #a3bffa;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             animation: spin 1s linear infinite;
             display: inline-block;
-            margin-right: 8px;
+            margin-right: 10px;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        h1 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.2);
+            background: linear-gradient(90deg, #ffffff, #d4a9d0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
     </style>
 </head>
-<body class="font-sans light">
-    <div class="container mx-auto p-6 max-w-3xl">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-4xl font-extrabold text-white drop-shadow-lg">
-                <i class="fas fa-rocket mr-2"></i> Bypass YeuMoney
+<body class="font-sans light relative">
+    <canvas id="particleCanvas"></canvas>
+    <div class="container mx-auto p-6 max-w-3xl relative z-10">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-5xl font-extrabold text-white drop-shadow-lg">
+                <i class="fas fa-rocket mr-3"></i> Bypass YeuMoney
             </h1>
-            <div class="flex space-x-2">
-                <button id="themeToggle" class="text-gray-800 dark:text-white font-bold py-2 px-4 rounded">
+            <div class="flex space-x-3">
+                <button id="themeToggle" class="text-gray-800 dark:text-white font-bold py-2 px-4 rounded-lg">
                     <i class="fas fa-moon mr-2"></i> Chế độ tối
                 </button>
-                <a href="https://discord.gg/2NpBPjM4PF" target="_blank" class="discord-btn text-white font-bold py-2 px-4 rounded flex items-center">
+                <a href="https://discord.gg/2NpBPjM4PF" target="_blank" class="discord-btn text-white font-bold py-2 px-4 rounded-lg flex items-center">
                     <i class="fab fa-discord mr-2"></i> Tham gia Discord
                 </a>
             </div>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Chọn Nghiệm Vụ</h2>
-            <div id="siteCheckboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6"></div>
-            <button id="startBypass" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition-colors">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 mb-8">
+            <h2 class="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-6">Chọn Nghiệm Vụ</h2>
+            <div id="siteCheckboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-6 mb-8"></div>
+            <button id="startBypass" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-lg transition-colors flex items-center justify-center">
                 <i class="fas fa-play mr-2"></i> Bắt Đầu Bypass
             </button>
         </div>
-        <div id="status" class="text-white text-lg mb-4 text-center"></div>
-        <div id="results" class="space-y-4"></div>
+        <div id="status" class="text-white text-xl mb-6 text-center"></div>
+        <div id="results" class="space-y-6"></div>
     </div>
 
     <script>
@@ -226,10 +240,10 @@
         // Tạo danh sách checkbox cho các trang
         Object.entries(urls).forEach(([site, data]) => {
             const div = document.createElement('div');
-            div.className = 'flex items-center p-2 bg-gray-100 dark:bg-gray-700 rounded card';
+            div.className = 'flex items-center p-3 bg-gray-100 dark:bg-gray-700 rounded-xl card';
             div.innerHTML = `
-                <input type="checkbox" id="${site}" value="${site}" class="mr-2 h-5 w-5">
-                <label for="${site}" class="flex items-center text-gray-800 dark:text-gray-100">${site.toUpperCase()}</label>
+                <input type="checkbox" id="${site}" value="${site}" class="mr-3 h-6 w-6">
+                <label for="${site}" class="flex items-center text-lg text-gray-800 dark:text-gray-100">${site.toUpperCase()}</label>
             `;
             siteCheckboxesDiv.appendChild(div);
         });
@@ -261,26 +275,26 @@
             const selectedSites = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
             if (selectedSites.length === 0) {
                 statusDiv.textContent = 'Vui lòng chọn ít nhất một nghiệm vụ!';
-                statusDiv.className = 'text-red-400 text-lg mb-4 text-center fade-in';
+                statusDiv.className = 'text-red-400 text-xl mb-6 text-center fade-in';
                 return;
             }
 
             startButton.disabled = true;
             startButton.innerHTML = '<span class="spinner"></span> Đang xử lý...';
             statusDiv.textContent = 'Đang bắt đầu bypass...';
-            statusDiv.className = 'text-white text-lg mb-4 text-center fade-in';
+            statusDiv.className = 'text-white text-xl mb-6 text-center fade-in';
             resultsDiv.innerHTML = '';
 
             for (const site of selectedSites) {
                 const resultDiv = document.createElement('div');
-                resultDiv.className = 'p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg card fade-in';
+                resultDiv.className = 'p-5 bg-white dark:bg-gray-800 rounded-xl shadow-2xl card fade-in';
                 resultDiv.innerHTML = `
-                    <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
-                    <p class="text-gray-600 dark:text-gray-300">Đang xử lý...</p>
-                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5 mt-2">
-                        <div id="progress-${site}" class="progress-bar bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300">Đang xử lý...</p>
+                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3 mt-3">
+                        <div id="progress-${site}" class="progress-bar h-3 rounded-full" style="width: 0%"></div>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Thời gian còn lại: <span id="timer-${site}">75s</span></p>
+                    <p class="text-base text-gray-500 dark:text-gray-400 mt-2">Thời gian còn lại: <span id="timer-${site}">75s</span></p>
                 `;
                 resultsDiv.appendChild(resultDiv);
 
@@ -305,10 +319,10 @@
 
                     if (match) {
                         resultDiv.innerHTML = `
-                            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
+                            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
                             <div class="flex items-center">
-                                <p class="text-green-600 dark:text-green-400"><i class="fas fa-check-circle mr-2"></i>Mã: ${match[1]}</p>
-                                <button class="ml-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white py-1 px-2 rounded copy-btn" data-code="${match[1]}">
+                                <p class="text-xl text-green-600 dark:text-green-400"><i class="fas fa-check-circle mr-2"></i>Mã: ${match[1]}</p>
+                                <button class="ml-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white py-2 px-3 rounded-lg copy-btn" data-code="${match[1]}">
                                     <i class="fas fa-copy mr-1"></i>Sao chép
                                 </button>
                             </div>
@@ -318,8 +332,8 @@
                         await sendWebhook(site, match[1]);
                     } else {
                         resultDiv.innerHTML = `
-                            <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
-                            <p class="text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Không tìm thấy mã. Liên kết có thể bị hỏng.</p>
+                            <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
+                            <p class="text-xl text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Không tìm thấy mã. Liên kết có thể bị hỏng.</p>
                         `;
                     }
                 } catch (error) {
@@ -327,16 +341,16 @@
                     timerSpan.textContent = '0s';
                     progressBar.style.width = '100%';
                     resultDiv.innerHTML = `
-                        <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
-                        <p class="text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Lỗi: ${error.message}</p>
+                        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
+                        <p class="text-xl text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Lỗi: ${error.message}</p>
                     `;
                 }
             }
 
             startButton.disabled = false;
             startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Bắt Đầu Bypass';
-            statusDiv.textContent = 'Bypass hoàn tất!';
-            statusDiv.className = 'text-green-400 text-lg mb-4 text-center fade-in';
+            statusDiv.textContent = 'Bypass hoàn tất! Số lần: ' + (bypassCount + 1);
+            statusDiv.className = 'text-green-400 text-xl mb-6 text-center fade-in';
 
             document.querySelectorAll('.copy-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -350,6 +364,66 @@
         }
 
         startButton.addEventListener('click', startBypass);
+
+        // Hiệu ứng particle nền
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray = [];
+        const numberOfParticles = 50;
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.color = document.body.classList.contains('dark') ? '#a3bffa' : '#d4a9d0';
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width) this.speedX = -this.speedX;
+                if (this.y < 0 || this.y > canvas.height) this.speedY = -this.speedY;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        document.body.addEventListener('click', () => {
+            particlesArray = [];
+            init();
+        });
     </script>
 </body>
 </html>
