@@ -9,11 +9,12 @@
     <style>
         body {
             min-height: 100vh;
-            transition: background 0.3s;
+            transition: background 0.5s ease;
             animation: gradientShift 15s ease infinite;
             opacity: 0;
             animation: fadeInPage 1s ease-in forwards;
             overflow: hidden;
+            will-change: background;
         }
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
@@ -31,9 +32,10 @@
             color: #e2e8f0;
         }
         .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(5px);
+            will-change: transform, box-shadow;
         }
         .dark .card {
             background: rgba(30, 32, 44, 0.95);
@@ -43,8 +45,9 @@
             box-shadow: 0 20px 30px rgba(0, 0, 0, 0.25), 0 0 15px rgba(255, 255, 255, 0.1);
         }
         .progress-bar {
-            transition: width 1s linear;
+            transition: width 1s ease-in-out;
             background: linear-gradient(90deg, #4c51bf, #a3bffa);
+            will-change: width;
         }
         .fade-in {
             animation: fadeIn 0.5s ease-in;
@@ -60,10 +63,11 @@
         .discord-btn, #startBypass {
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
             background: linear-gradient(45deg, #7289da, #5b6eae);
             border-radius: 10px;
             padding: 12px 24px;
+            will-change: transform, box-shadow;
         }
         .dark .discord-btn, .dark #startBypass {
             background: linear-gradient(45deg, #5b6eae, #4a5568);
@@ -84,6 +88,7 @@
             transform: translate(-50%, -50%);
             transition: width 0.6s ease, height 0.6s ease;
             z-index: 1;
+            will-change: width, height;
         }
         .discord-btn:hover::after, #startBypass:hover::after {
             width: 300%;
@@ -93,6 +98,8 @@
             background: linear-gradient(45deg, #edf2f7, #d1d5db);
             border-radius: 10px;
             padding: 10px 20px;
+            transition: background 0.4s ease;
+            will-change: background;
         }
         .dark #themeToggle {
             background: linear-gradient(45deg, #4a5568, #718096);
@@ -112,6 +119,7 @@
             animation: spin 1s linear infinite;
             display: inline-block;
             margin-right: 10px;
+            will-change: transform;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -123,6 +131,7 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            will-change: background;
         }
     </style>
 </head>
@@ -154,6 +163,13 @@
     </div>
 
     <script>
+        // Kiểm tra DOM trước khi sử dụng
+        function getElementSafe(id) {
+            const el = document.getElementById(id);
+            if (!el) console.error(`Element with id ${id} not found`);
+            return el;
+        }
+
         // Vô hiệu hóa nhấp chuột phải
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
@@ -178,29 +194,26 @@
             e.preventDefault();
         });
 
-        // Phát hiện DevTools
-        const detectDevTools = () => {
-            const threshold = 200;
+        // Phát hiện DevTools tối ưu
+        let devToolsCheckTimeout;
+        function detectDevTools() {
+            clearTimeout(devToolsCheckTimeout);
+            const threshold = 250;
             const widthDiff = window.outerWidth - window.innerWidth;
             const heightDiff = window.outerHeight - window.innerHeight;
-            const screenDiff = (window.screen.width - window.innerWidth > 150) || 
-                             (window.screen.height - window.innerHeight > 150);
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
 
-            let debuggerPresent = false;
-            const startTime = performance.now();
-            for (let i = 0; i < 1000000; i++); 
-            const endTime = performance.now();
-            if (endTime - startTime > 50 && !navigator.userAgent.includes('Mobile')) debuggerPresent = true;
-
-            if (widthDiff > threshold || heightDiff > threshold || screenDiff || debuggerPresent) {
-                alert('Phát hiện DevTools! Vui lòng đóng để tiếp tục!');
-                window.location.reload();
-            } else if (widthDiff > 50 || heightDiff > 50) {
+            if (widthDiff > threshold || heightDiff > threshold) {
+                if (!isMobile) {
+                    alert('Phát hiện DevTools! Vui lòng đóng để tiếp tục!');
+                    window.location.reload();
+                }
+            } else if (widthDiff > 100 || heightDiff > 100) {
                 alert('Có thể phát hiện nhầm DevTools. Hãy kiểm tra và xác nhận bạn không mở DevTools!');
             }
-        };
-
-        setInterval(detectDevTools, 100);
+            devToolsCheckTimeout = setTimeout(detectDevTools, 500); // Giảm tần suất kiểm tra
+        }
+        detectDevTools();
 
         // URL webhook và danh sách các trang
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1380090512492728361/rlm3jJOs5eCGUXZAoqOpzIKAjuypOQbnVN8Jnzhb59FQvPVdEz1WnZbT16_ptuRPs7CE';
@@ -214,11 +227,11 @@
             "bk8": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://bk8ze.com/cach-choi-bai-catte&loai_traffic=https://bk8ze.com/&clk=1000" },
         };
 
-        const startButton = document.getElementById('startBypass');
-        const statusDiv = document.getElementById('status');
-        const resultsDiv = document.getElementById('results');
-        const siteCheckboxesDiv = document.getElementById('siteCheckboxes');
-        const themeToggle = document.getElementById('themeToggle');
+        const startButton = getElementSafe('startBypass');
+        const statusDiv = getElementSafe('status');
+        const resultsDiv = getElementSafe('results');
+        const siteCheckboxesDiv = getElementSafe('siteCheckboxes');
+        const themeToggle = getElementSafe('themeToggle');
 
         // Khởi tạo hoặc lấy số lần bypass từ localStorage
         let bypassCount = parseInt(localStorage.getItem('bypassCount')) || 0;
@@ -235,6 +248,7 @@
             const isDark = document.body.classList.contains('dark');
             themeToggle.innerHTML = isDark ? '<i class="fas fa-sun mr-2"></i> Chế độ sáng' : '<i class="fas fa-moon mr-2"></i> Chế độ tối';
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            particlesArray.forEach(p => p.color = isDark ? '#a3bffa' : '#d4a9d0');
         });
 
         // Tạo danh sách checkbox cho các trang
@@ -274,16 +288,22 @@
         async function startBypass() {
             const selectedSites = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
             if (selectedSites.length === 0) {
-                statusDiv.textContent = 'Vui lòng chọn ít nhất một nghiệm vụ!';
-                statusDiv.className = 'text-red-400 text-xl mb-6 text-center fade-in';
+                if (statusDiv) {
+                    statusDiv.textContent = 'Vui lòng chọn ít nhất một nghiệm vụ!';
+                    statusDiv.className = 'text-red-400 text-xl mb-6 text-center fade-in';
+                }
                 return;
             }
 
-            startButton.disabled = true;
-            startButton.innerHTML = '<span class="spinner"></span> Đang xử lý...';
-            statusDiv.textContent = 'Đang bắt đầu bypass...';
-            statusDiv.className = 'text-white text-xl mb-6 text-center fade-in';
-            resultsDiv.innerHTML = '';
+            if (startButton) {
+                startButton.disabled = true;
+                startButton.innerHTML = '<span class="spinner"></span> Đang xử lý...';
+            }
+            if (statusDiv) {
+                statusDiv.textContent = 'Đang bắt đầu bypass...';
+                statusDiv.className = 'text-white text-xl mb-6 text-center fade-in';
+            }
+            if (resultsDiv) resultsDiv.innerHTML = '';
 
             for (const site of selectedSites) {
                 const resultDiv = document.createElement('div');
@@ -296,26 +316,31 @@
                     </div>
                     <p class="text-base text-gray-500 dark:text-gray-400 mt-2">Thời gian còn lại: <span id="timer-${site}">75s</span></p>
                 `;
-                resultsDiv.appendChild(resultDiv);
+                if (resultsDiv) resultsDiv.appendChild(resultDiv);
 
                 let timeLeft = 75;
                 const timerSpan = document.getElementById(`timer-${site}`);
                 const progressBar = document.getElementById(`progress-${site}`);
-                const timerInterval = setInterval(() => {
-                    timeLeft--;
-                    timerSpan.textContent = `${timeLeft}s`;
-                    progressBar.style.width = `${((75 - timeLeft) / 75) * 100}%`;
-                    if (timeLeft <= 0) clearInterval(timerInterval);
-                }, 1000);
+                if (timerSpan && progressBar) {
+                    const timerInterval = setInterval(() => {
+                        timeLeft--;
+                        timerSpan.textContent = `${timeLeft}s`;
+                        progressBar.style.width = `${((75 - timeLeft) / 75) * 100}%`;
+                        if (timeLeft <= 0) clearInterval(timerInterval);
+                    }, 1000);
+                }
 
                 try {
-                    const response = await fetch(urls[site].url, { method: 'POST' });
+                    const response = await fetch(urls[site].url, { method: 'POST', timeout: 30000 });
                     const html = await response.text();
-                    const match = html.match(/<span id="layma_me_vuatraffic"[^>]*>\s*(\d+)\s*<\/span>/);
                     await new Promise(resolve => setTimeout(resolve, 75000));
-                    clearInterval(timerInterval);
-                    timerSpan.textContent = '0s';
-                    progressBar.style.width = '100%';
+                    const match = html.match(/<span id="layma_me_vuatraffic"[^>]*>\s*(\d+)\s*<\/span>/);
+
+                    if (timerSpan && progressBar) {
+                        clearInterval(window[`timerInterval_${site}`]);
+                        timerSpan.textContent = '0s';
+                        progressBar.style.width = '100%';
+                    }
 
                     if (match) {
                         resultDiv.innerHTML = `
@@ -337,9 +362,11 @@
                         `;
                     }
                 } catch (error) {
-                    clearInterval(timerInterval);
-                    timerSpan.textContent = '0s';
-                    progressBar.style.width = '100%';
+                    if (timerSpan && progressBar) {
+                        clearInterval(window[`timerInterval_${site}`]);
+                        timerSpan.textContent = '0s';
+                        progressBar.style.width = '100%';
+                    }
                     resultDiv.innerHTML = `
                         <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
                         <p class="text-xl text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Lỗi: ${error.message}</p>
@@ -347,40 +374,43 @@
                 }
             }
 
-            startButton.disabled = false;
-            startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Bắt Đầu Bypass';
-            statusDiv.textContent = 'Bypass hoàn tất! Số lần: ' + (bypassCount + 1);
-            statusDiv.className = 'text-green-400 text-xl mb-6 text-center fade-in';
+            if (startButton) {
+                startButton.disabled = false;
+                startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Bắt Đầu Bypass';
+            }
+            if (statusDiv) {
+                statusDiv.textContent = 'Bypass hoàn tất! Số lần: ' + (bypassCount + 1);
+                statusDiv.className = 'text-green-400 text-xl mb-6 text-center fade-in';
+            }
 
-            document.querySelectorAll('.copy-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    navigator.clipboard.writeText(btn.dataset.code);
-                    btn.innerHTML = '<i class="fas fa-check mr-1"></i>Đã sao chép!';
-                    setTimeout(() => {
-                        btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Sao chép';
-                    }, 2000);
+            if (resultsDiv) {
+                document.querySelectorAll('.copy-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        navigator.clipboard.writeText(btn.dataset.code);
+                        btn.innerHTML = '<i class="fas fa-check mr-1"></i>Đã sao chép!';
+                        setTimeout(() => {
+                            btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Sao chép';
+                        }, 2000);
+                    });
                 });
-            });
+            }
         }
 
-        startButton.addEventListener('click', startBypass);
+        if (startButton) startButton.addEventListener('click', startBypass);
 
         // Hiệu ứng particle nền
-        const canvas = document.getElementById('particleCanvas');
+        const canvas = getElementSafe('particleCanvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
         let particlesArray = [];
-        const numberOfParticles = 50;
+        const numberOfParticles = 30;
 
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
                 this.size = Math.random() * 3 + 1;
-                this.speedX = Math.random() * 2 - 1;
-                this.speedY = Math.random() * 2 - 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
                 this.color = document.body.classList.contains('dark') ? '#a3bffa' : '#d4a9d0';
             }
             update() {
@@ -398,32 +428,52 @@
         }
 
         function init() {
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
+            try {
+                particlesArray = [];
+                for (let i = 0; i < numberOfParticles; i++) {
+                    particlesArray.push(new Particle());
+                }
+            } catch (e) {
+                console.error('Error initializing particles:', e);
             }
         }
 
         function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
+            try {
+                if (!ctx) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                    particlesArray[i].draw();
+                }
+                requestAnimationFrame(animate);
+            } catch (e) {
+                console.error('Animation error:', e);
             }
-            requestAnimationFrame(animate);
         }
 
-        init();
-        animate();
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
 
-        window.addEventListener('resize', () => {
+        function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-        });
-
-        document.body.addEventListener('click', () => {
-            particlesArray = [];
             init();
-        });
+        }
+
+        window.addEventListener('resize', debounce(resizeCanvas, 100));
+        document.body.addEventListener('click', init);
+        resizeCanvas();
+        animate();
     </script>
 </body>
 </html>
