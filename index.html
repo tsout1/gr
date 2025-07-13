@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="https://tse3.mm.bing.net/th/id/OIP.-pmFs3faKPQ6beJQMlzNDAHaEY?pid=Api&P=0&h=220">
     <title>Bypass YeuMoney</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -107,7 +106,7 @@
                     <i class="fas fa-moon mr-2"></i> Chế độ tối
                 </button>
                 <a href="https://discord.gg/2NpBPjM4PF" target="_blank" class="discord-btn text-white font-bold py-2 px-4 rounded flex items-center">
-                    <i class="fab fa-discord mr-2"></i> Join Discord
+                    <i class="fab fa-discord mr-2"></i> Tham gia Discord
                 </a>
             </div>
         </div>
@@ -115,7 +114,7 @@
             <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Chọn Nghiệm Vụ</h2>
             <div id="siteCheckboxes" class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6"></div>
             <button id="startBypass" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition-colors">
-                <i class="fas fa-play mr-2"></i> Start Bypass
+                <i class="fas fa-play mr-2"></i> Bắt Đầu Bypass
             </button>
         </div>
         <div id="status" class="text-white text-lg mb-4 text-center"></div>
@@ -123,13 +122,13 @@
     </div>
 
     <script>
-        // Disable right-click
+        // Vô hiệu hóa nhấp chuột phải
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
             alert('Tính năng này đã bị vô hiệu hóa!');
         });
 
-        // Disable common keyboard shortcuts
+        // Vô hiệu hóa các phím tắt phổ biến
         document.addEventListener('keydown', (e) => {
             if (
                 e.key === 'F12' ||
@@ -142,50 +141,41 @@
             }
         });
 
-        // Disable text selection
+        // Vô hiệu hóa chọn văn bản
         document.addEventListener('selectstart', (e) => {
             e.preventDefault();
         });
 
-        // Advanced DevTools detection
+        // Phát hiện DevTools cải tiến
         const detectDevTools = () => {
-            // Window size check
-            const threshold = 100;
+            // Kiểm tra kích thước cửa sổ với ngưỡng cao hơn
+            const threshold = 200;
             const widthDiff = window.outerWidth - window.innerWidth;
             const heightDiff = window.outerHeight - window.innerHeight;
             const screenDiff = (window.screen.width - window.innerWidth > 150) || 
                              (window.screen.height - window.innerHeight > 150);
 
-            // Debugger detection using timing
+            // Kiểm tra debugger với điều kiện hiệu suất
             let debuggerPresent = false;
             const startTime = performance.now();
-            let i = 0;
-            while (i < 1000000) i++; // Simulate work
+            for (let i = 0; i < 1000000; i++); // Mô phỏng công việc
             const endTime = performance.now();
-            if (endTime - startTime > 50) debuggerPresent = true; // Debuggers slow down execution
+            // Chỉ xem là debugger nếu thời gian vượt quá 50ms và không do hiệu suất hệ thống
+            if (endTime - startTime > 50 && !navigator.userAgent.includes('Mobile')) debuggerPresent = true;
 
-            // Console object manipulation check
-            let consoleManipulated = false;
-            const consoleTest = {};
-            consoleTest.toString = function() { consoleManipulated = true; return ''; };
-            console.log(consoleTest);
-
-            // RegExp.toString check
-            let regExpTampered = false;
-            const testRegExp = /./;
-            if (testRegExp.toString().includes('native code') === false) regExpTampered = true;
-
-            // Trigger alert and reload if DevTools is detected
-            if (widthDiff > threshold || heightDiff > threshold || screenDiff || debuggerPresent || consoleManipulated || regExpTampered) {
+            // Kiểm tra nếu DevTools được phát hiện
+            if (widthDiff > threshold || heightDiff > threshold || screenDiff || debuggerPresent) {
                 alert('Phát hiện DevTools! Vui lòng đóng để tiếp tục!');
                 window.location.reload();
+            } else if (widthDiff > 50 || heightDiff > 50) { // Cảnh báo tạm thời nếu có sự khác biệt nhỏ
+                alert('Có thể phát hiện nhầm DevTools. Hãy kiểm tra và xác nhận bạn không mở DevTools!');
             }
         };
 
-        // Run detection every 100ms
+        // Chạy kiểm tra mỗi 100ms
         setInterval(detectDevTools, 100);
 
-        // Webhook URL and site URLs
+        // URL webhook và danh sách các trang
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1380090512492728361/rlm3jJOs5eCGUXZAoqOpzIKAjuypOQbnVN8Jnzhb59FQvPVdEz1WnZbT16_ptuRPs7CE';
         const urls = {
             "m88": { url: "https://traffic-user.net/GET_MA.php?codexn=taodeptrai&url=https://bet88ec.com/cach-danh-bai-sam-loc&loai_traffic=https://bet88ec.com/&clk=1000" },
@@ -203,7 +193,7 @@
         const siteCheckboxesDiv = document.getElementById('siteCheckboxes');
         const themeToggle = document.getElementById('themeToggle');
 
-        // Theme toggle
+        // Chuyển đổi giao diện sáng/tối
         if (localStorage.getItem('theme') === 'dark') {
             document.body.classList.remove('light');
             document.body.classList.add('dark');
@@ -217,7 +207,7 @@
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         });
 
-        // Populate site checkboxes
+        // Tạo danh sách checkbox cho các trang
         Object.entries(urls).forEach(([site, data]) => {
             const div = document.createElement('div');
             div.className = 'flex items-center p-2 bg-gray-100 dark:bg-gray-700 rounded card';
@@ -228,7 +218,7 @@
             siteCheckboxesDiv.appendChild(div);
         });
 
-        // Send webhook
+        // Gửi webhook
         async function sendWebhook(site, code) {
             if (!WEBHOOK_URL) return;
             try {
@@ -250,7 +240,7 @@
             }
         }
 
-        // Start bypass process
+        // Quá trình bypass
         async function startBypass() {
             const selectedSites = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
             if (selectedSites.length === 0) {
@@ -260,8 +250,8 @@
             }
 
             startButton.disabled = true;
-            startButton.innerHTML = '<span class="spinner"></span> Processing...';
-            statusDiv.textContent = 'Starting bypass...';
+            startButton.innerHTML = '<span class="spinner"></span> Đang xử lý...';
+            statusDiv.textContent = 'Đang bắt đầu bypass...';
             statusDiv.className = 'text-white text-lg mb-4 text-center fade-in';
             resultsDiv.innerHTML = '';
 
@@ -270,11 +260,11 @@
                 resultDiv.className = 'p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg card fade-in';
                 resultDiv.innerHTML = `
                     <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
-                    <p class="text-gray-600 dark:text-gray-300">Processing...</p>
+                    <p class="text-gray-600 dark:text-gray-300">Đang xử lý...</p>
                     <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5 mt-2">
                         <div id="progress-${site}" class="progress-bar bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Time remaining: <span id="timer-${site}">75s</span></p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Thời gian còn lại: <span id="timer-${site}">75s</span></p>
                 `;
                 resultsDiv.appendChild(resultDiv);
 
@@ -292,7 +282,7 @@
                     const response = await fetch(urls[site].url, { method: 'POST' });
                     const html = await response.text();
                     const match = html.match(/<span id="layma_me_vuatraffic"[^>]*>\s*(\d+)\s*<\/span>/);
-                    await new Promise(resolve => setTimeout(resolve, 75000)); // Wait 75 seconds
+                    await new Promise(resolve => setTimeout(resolve, 75000)); // Chờ 75 giây
                     clearInterval(timerInterval);
                     timerSpan.textContent = '0s';
                     progressBar.style.width = '100%';
@@ -301,9 +291,9 @@
                         resultDiv.innerHTML = `
                             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
                             <div class="flex items-center">
-                                <p class="text-green-600 dark:text-green-400"><i class="fas fa-check-circle mr-2"></i>Code: ${match[1]}</p>
+                                <p class="text-green-600 dark:text-green-400"><i class="fas fa-check-circle mr-2"></i>Mã: ${match[1]}</p>
                                 <button class="ml-4 bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-800 dark:text-white py-1 px-2 rounded copy-btn" data-code="${match[1]}">
-                                    <i class="fas fa-copy mr-1"></i>Copy
+                                    <i class="fas fa-copy mr-1"></i>Sao chép
                                 </button>
                             </div>
                         `;
@@ -311,7 +301,7 @@
                     } else {
                         resultDiv.innerHTML = `
                             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
-                            <p class="text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>No code found. Link may be broken.</p>
+                            <p class="text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Không tìm thấy mã. Liên kết có thể bị hỏng.</p>
                         `;
                     }
                 } catch (error) {
@@ -320,22 +310,22 @@
                     progressBar.style.width = '100%';
                     resultDiv.innerHTML = `
                         <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">${site.toUpperCase()}</h2>
-                        <p class="text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Error: ${error.message}</p>
+                        <p class="text-red-600 dark:text-red-400"><i class="fas fa-exclamation-circle mr-2"></i>Lỗi: ${error.message}</p>
                     `;
                 }
             }
 
             startButton.disabled = false;
-            startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Start Bypass';
-            statusDiv.textContent = 'Bypass completed!';
+            startButton.innerHTML = '<i class="fas fa-play mr-2"></i>Bắt Đầu Bypass';
+            statusDiv.textContent = 'Bypass hoàn tất!';
             statusDiv.className = 'text-green-400 text-lg mb-4 text-center fade-in';
 
             document.querySelectorAll('.copy-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     navigator.clipboard.writeText(btn.dataset.code);
-                    btn.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                    btn.innerHTML = '<i class="fas fa-check mr-1"></i>Đã sao chép!';
                     setTimeout(() => {
-                        btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy';
+                        btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Sao chép';
                     }, 2000);
                 });
             });
