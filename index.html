@@ -3,67 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phát Âm Thanh từ YouTube</title>
+  <title>=0</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
-    }
-    .player {
-      background-color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
-    }
-    button {
-      padding: 10px 20px;
-      margin: 5px;
-      border: none;
-      border-radius: 5px;
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    input[type="range"] {
-      width: 100px;
-      margin: 10px 0;
-    }
     /* Ẩn video, chỉ giữ âm thanh */
     .video-container {
       width: 0;
       height: 0;
       overflow: hidden;
     }
+    /* Tùy chỉnh thanh tiến trình */
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 5px;
+      outline: none;
+      transition: background 0.3s;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #3b82f6;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: #2563eb;
+    }
   </style>
 </head>
-<body>
-  <div class="player">
-    <h1>Phát Âm Thanh từ Timi EDM</h1>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen" oncontextmenu="return false;">
+  <div class="player bg-white p-6 rounded-xl shadow-2xl max-w-md w-full">
+    <h1 class="text-2xl font-bold text-gray-800 mb-4 text-center">Phát Âm Thanh từ Timi EDM</h1>
     <div class="video-container">
       <iframe
         id="youtubePlayer"
-        src="https://www.youtube.com/embed/8-u7Mp9ehyY?enablejsapi=1"
+        src="https://www.youtube.com/watch?v=vgDGRHSEWls&list=RDvgDGRHSEWls&start_radio=1&rv=61J5fkQHLCg?enablejsapi=1"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
       ></iframe>
     </div>
-    <button onclick="playAudio()">Phát</button>
-    <button onclick="pauseAudio()">Tạm Dừng</button>
-    <button onclick="logPlayerInfo()">Hiển thị thông tin trong Console</button>
+    <div class="flex justify-center space-x-4 mb-4">
+      <button onclick="playAudio()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Phát</button>
+      <button onclick="pauseAudio()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Tạm Dừng</button>
+    </div>
+    <div class="mb-4">
+      <label for="volume" class="block text-sm font-medium text-gray-700">Âm lượng</label>
+      <input type="range" id="volume" min="0" max="1" step="0.1" value="1" oninput="adjustVolume(this.value)" class="w-full">
+    </div>
     <div>
-      <label for="volume">Âm lượng:</label>
-      <input type="range" id="volume" min="0" max="1" step="0.1" value="1" oninput="adjustVolume(this.value)">
+      <label for="progress" class="block text-sm font-medium text-gray-700">Tiến trình</label>
+      <input type="range" id="progress" min="0" max="100" value="0" oninput="seekTo(this.value)" class="w-full">
+      <div class="flex justify-between text-sm text-gray-600 mt-1">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
     </div>
   </div>
 
@@ -75,6 +74,7 @@
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     var player;
+    var duration = 0;
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('youtubePlayer', {
         events: {
@@ -85,13 +85,15 @@
     }
 
     function onPlayerReady(event) {
-      // Đặt âm lượng ban đầu
-      player.setVolume(100); // 100 = tối đa, tương ứng với value=1 của thanh âm lượng
+      player.setVolume(100);
+      duration = player.getDuration();
+      document.getElementById('duration').textContent = formatTime(duration);
       console.log("Trình phát YouTube đã sẵn sàng.");
+      setInterval(updateProgress, 1000);
+      setInterval(logPlayerInfo, 1000);
     }
 
     function onPlayerStateChange(event) {
-      // Log trạng thái trình phát vào console
       const states = {
         '-1': 'Chưa bắt đầu',
         0: 'Kết thúc',
@@ -101,7 +103,7 @@
         5: 'Video được cued'
       };
       console.log("Trạng thái trình phát: ", states[event.data]);
-      console.log("Thời gian hiện tại: ", player.getCurrentTime(), "giây");
+      console.log("Thời gian hiện tại: ", player.getCurrentTime().toFixed(2), "giây");
     }
 
     function playAudio() {
@@ -113,19 +115,53 @@
     }
 
     function adjustVolume(value) {
-      player.setVolume(value * 100); // Chuyển đổi từ 0-1 sang 0-100 cho YouTube API
+      player.setVolume(value * 100);
+    }
+
+    function seekTo(value) {
+      const seconds = (value / 100) * duration;
+      player.seekTo(seconds, true);
+    }
+
+    function updateProgress() {
+      const currentTime = player.getCurrentTime();
+      document.getElementById('currentTime').textContent = formatTime(currentTime);
+      document.getElementById('progress').value = (currentTime / duration) * 100;
+    }
+
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
     function logPlayerInfo() {
-      // Hiển thị thông tin video trong console
       console.log("Thông tin video:");
       console.log("Tiêu đề: Timi EDM (dựa trên tài liệu)");
       console.log("URL: https://www.youtube.com/watch?v=8-u7Mp9ehyY");
-      console.log("Thời lượng: ", player.getDuration(), "giây");
-      console.log("Thời gian hiện tại: ", player.getCurrentTime(), "giây");
+      console.log("Thời lượng: ", player.getDuration().toFixed(2), "giây");
+      console.log("Thời gian hiện tại: ", player.getCurrentTime().toFixed(2), "giây");
       console.log("Âm lượng: ", player.getVolume());
       console.log("Trạng thái: ", player.getPlayerState());
     }
+
+    // Chặn phím Ctrl+U, F12, Ctrl+Shift+I
+    document.addEventListener('keydown', function(event) {
+      if (event.ctrlKey && event.key === 'u') {
+        event.preventDefault();
+        console.log("Đã chặn Ctrl+U");
+      }
+      if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && event.key === 'I')) {
+        event.preventDefault();
+        console.log("Đã chặn phím mở DevTools (F12 hoặc Ctrl+Shift+I)");
+      }
+    });
+
+    // Chặn chuột phải
+    document.addEventListener('contextmenu', function(event) {
+      event.preventDefault();
+      console.log("Đã chặn chuột phải");
+    });
   </script>
 </body>
 </html>
