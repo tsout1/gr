@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phát Ghi Âm</title>
+  <title>Phát Âm Thanh từ YouTube</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -38,17 +38,29 @@
       width: 100px;
       margin: 10px 0;
     }
+    /* Ẩn video, chỉ giữ âm thanh */
+    .video-container {
+      width: 0;
+      height: 0;
+      overflow: hidden;
+    }
   </style>
 </head>
 <body>
   <div class="player">
-    <h1>Phát Ghi Âm</h1>
-    <audio id="audioPlayer">
-      <source src="https://www.youtube.com/watch?v=8-u7Mp9ehyY" type="audio/mpeg">
-      Trình duyệt của bạn không hỗ trợ phát âm thanh.
-    </audio>
+    <h1>Phát Âm Thanh từ Timi EDM</h1>
+    <div class="video-container">
+      <iframe
+        id="youtubePlayer"
+        src="https://www.youtube.com/embed/8-u7Mp9ehyY?enablejsapi=1"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
     <button onclick="playAudio()">Phát</button>
     <button onclick="pauseAudio()">Tạm Dừng</button>
+    <button onclick="logPlayerInfo()">Hiển thị thông tin trong Console</button>
     <div>
       <label for="volume">Âm lượng:</label>
       <input type="range" id="volume" min="0" max="1" step="0.1" value="1" oninput="adjustVolume(this.value)">
@@ -56,18 +68,63 @@
   </div>
 
   <script>
-    const audio = document.getElementById("audioPlayer");
+    // Tải YouTube IFrame Player API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('youtubePlayer', {
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      // Đặt âm lượng ban đầu
+      player.setVolume(100); // 100 = tối đa, tương ứng với value=1 của thanh âm lượng
+      console.log("Trình phát YouTube đã sẵn sàng.");
+    }
+
+    function onPlayerStateChange(event) {
+      // Log trạng thái trình phát vào console
+      const states = {
+        '-1': 'Chưa bắt đầu',
+        0: 'Kết thúc',
+        1: 'Đang phát',
+        2: 'Tạm dừng',
+        3: 'Đang đệm',
+        5: 'Video được cued'
+      };
+      console.log("Trạng thái trình phát: ", states[event.data]);
+      console.log("Thời gian hiện tại: ", player.getCurrentTime(), "giây");
+    }
 
     function playAudio() {
-      audio.play();
+      player.playVideo();
     }
 
     function pauseAudio() {
-      audio.pause();
+      player.pauseVideo();
     }
 
     function adjustVolume(value) {
-      audio.volume = value;
+      player.setVolume(value * 100); // Chuyển đổi từ 0-1 sang 0-100 cho YouTube API
+    }
+
+    function logPlayerInfo() {
+      // Hiển thị thông tin video trong console
+      console.log("Thông tin video:");
+      console.log("Tiêu đề: Timi EDM (dựa trên tài liệu)");
+      console.log("URL: https://www.youtube.com/watch?v=8-u7Mp9ehyY");
+      console.log("Thời lượng: ", player.getDuration(), "giây");
+      console.log("Thời gian hiện tại: ", player.getCurrentTime(), "giây");
+      console.log("Âm lượng: ", player.getVolume());
+      console.log("Trạng thái: ", player.getPlayerState());
     }
   </script>
 </body>
