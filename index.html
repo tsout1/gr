@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phát Âm Thanh từ Timi EDM</title>
+  <title>Phát Âm Thanh từ Playlist Timi EDM</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* Ẩn video, chỉ giữ âm thanh */
@@ -12,7 +12,7 @@
       height: 0;
       overflow: hidden;
     }
-    /* Tùy chỉnh thanh tiến trình */
+    /* Tùy chỉnh thanh tiến trình và âm lượng */
     input[type="range"] {
       -webkit-appearance: none;
       width: 100%;
@@ -38,11 +38,11 @@
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen" oncontextmenu="return false;">
   <div class="player bg-white p-6 rounded-xl shadow-2xl max-w-md w-full">
-    <h1 class="text-2xl font-bold text-gray-800 mb-4 text-center">Phát Âm Thanh từ Timi EDM</h1>
+    <h1 class="text-2xl font-bold text-gray-800 mb-4 text-center">Phát Âm Thanh từ Playlist Timi EDM</h1>
     <div class="video-container">
       <iframe
         id="youtubePlayer"
-        src="https://www.youtube.com/embed/8-u7Mp9ehyY?enablejsapi=1"
+        src="https://www.youtube.com/embed/videoseries?list=RDvgDGRHSEWls&enablejsapi=1"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
@@ -51,6 +51,8 @@
     <div class="flex justify-center space-x-4 mb-4">
       <button onclick="playAudio()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Phát</button>
       <button onclick="pauseAudio()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Tạm Dừng</button>
+      <button onclick="nextVideo()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Bài Tiếp</button>
+      <button onclick="previousVideo()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Bài Trước</button>
     </div>
     <div class="mb-4">
       <label for="volume" class="block text-sm font-medium text-gray-700">Âm lượng</label>
@@ -104,6 +106,11 @@
       };
       console.log("Trạng thái trình phát: ", states[event.data]);
       console.log("Thời gian hiện tại: ", player.getCurrentTime().toFixed(2), "giây");
+      // Cập nhật thời lượng khi video mới trong playlist được tải
+      if (event.data === 1 || event.data === 3) {
+        duration = player.getDuration();
+        document.getElementById('duration').textContent = formatTime(duration);
+      }
     }
 
     function playAudio() {
@@ -112,6 +119,14 @@
 
     function pauseAudio() {
       player.pauseVideo();
+    }
+
+    function nextVideo() {
+      player.nextVideo();
+    }
+
+    function previousVideo() {
+      player.previousVideo();
     }
 
     function adjustVolume(value) {
@@ -126,7 +141,7 @@
     function updateProgress() {
       const currentTime = player.getCurrentTime();
       document.getElementById('currentTime').textContent = formatTime(currentTime);
-      document.getElementById('progress').value = (currentTime / duration) * 100;
+      document.getElementById('progress').value = duration ? (currentTime / duration) * 100 : 0;
     }
 
     function formatTime(seconds) {
@@ -138,7 +153,7 @@
     function logPlayerInfo() {
       console.log("Thông tin video:");
       console.log("Tiêu đề: Timi EDM (dựa trên tài liệu)");
-      console.log("URL: https://www.youtube.com/watch?v=8-u7Mp9ehyY");
+      console.log("URL: https://www.youtube.com/watch?v=vgDGRHSEWls (hoặc video hiện tại trong playlist)");
       console.log("Thời lượng: ", player.getDuration().toFixed(2), "giây");
       console.log("Thời gian hiện tại: ", player.getCurrentTime().toFixed(2), "giây");
       console.log("Âm lượng: ", player.getVolume());
