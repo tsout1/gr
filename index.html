@@ -200,23 +200,62 @@
       z-index: 1000;
       display: none;
       font-family: 'Orbitron', sans-serif;
-      transition: transform 0.4s ease, opacity 0.4s ease;
+      transition: all 0.4s ease, width 0.4s ease, height 0.4s ease, top 0.4s ease, left 0.4s ease, border-radius 0.4s ease;
       opacity: 0;
       transform: translateY(20px);
+      will-change: transform, opacity, width, height, top, left, border-radius;
     }
 
     .player-container.active {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      border-radius: 0;
+      background: rgba(30, 30, 30, 0.95);
       opacity: 1;
       transform: translateY(0);
+      z-index: 2000;
+      padding: 30px;
     }
 
     .player-container h3 {
       color: #00ff00;
       text-align: center;
-      font-size: 1.5em;
-      margin-bottom: 10px;
+      font-size: 2em;
+      margin-bottom: 20px;
       text-shadow: 0 0 8px #00ff00;
+    }
+
+    .player-controls {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .playlist-selector, .url-inputs, .playback-buttons, .volume-control, .progress-container {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .url-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .playback-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
     }
 
     .video-container {
@@ -274,7 +313,7 @@
       border: 1px solid #00ff00;
       box-shadow: 0 0 10px #00ff00;
       cursor: pointer;
-      z-index: 1001;
+      z-index: 3000;
       transition: all 0.3s ease;
       will-change: transform, box-shadow;
     }
@@ -338,20 +377,33 @@
         padding: 8px 15px;
         font-size: 0.9em;
       }
-      .player-container {
-        max-width: 280px;
-        padding: 10px;
+      .player-container.active {
+        padding: 15px;
       }
       .player-container h3 {
-        font-size: 1.2em;
+        font-size: 1.5em;
+        margin-bottom: 15px;
       }
-      .toggle-player-btn {
-        width: 40px;
-        height: 40px;
+      .player-controls {
+        max-width: 100%;
+      }
+      .playlist-selector, .url-inputs, .playback-buttons, .volume-control, .progress-container {
+        max-width: 100%;
+      }
+      .url-inputs {
+        gap: 10px;
+      }
+      .playback-buttons {
+        gap: 5px;
+        flex-wrap: wrap;
       }
       button {
         padding: 8px 12px;
         font-size: 0.9em;
+      }
+      .toggle-player-btn {
+        width: 40px;
+        height: 40px;
       }
     }
   </style>
@@ -369,22 +421,52 @@
   <div class="toggle-player-btn" id="togglePlayerBtn"></div>
   <div class="player-container" id="playerContainer">
     <h3>Playlist</h3>
-    <div class="mb-3">
-      <label class="block text-sm font-medium text-green-400 mb-1">Chọn Playlist để phát trước</label>
-      <select id="playlistSelector" class="bg-gray-800 text-white p-2 rounded-lg w-full">
-        <option value="1">Playlist 1</option>
-        <option value="2">Playlist 2</option>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="customPlaylist1" class="block text-sm font-medium text-green-400 mb-1">URL Playlist 1</label>
-      <input type="text" id="customPlaylist1" class="bg-gray-800 text-white p-2 rounded-lg w-full" placeholder="Nhập URL Playlist 1">
-      <button onclick="updatePlaylist(1)" class="mt-2 bg-green-600 text-black px-3 py-1.5 rounded-lg text-sm font-bold">Cập nhật Playlist 1</button>
-    </div>
-    <div class="mb-3">
-      <label for="customPlaylist2" class="block text-sm font-medium text-green-400 mb-1">URL Playlist 2</label>
-      <input type="text" id="customPlaylist2" class="bg-gray-800 text-white p-2 rounded-lg w-full" placeholder="Nhập URL Playlist 2">
-      <button onclick="updatePlaylist(2)" class="mt-2 bg-green-600 text-black px-3 py-1.5 rounded-lg text-sm font-bold">Cập nhật Playlist 2</button>
+    <div class="player-controls">
+      <div class="playlist-selector">
+        <label class="block text-sm font-medium text-green-400 mb-2">Chọn Playlist để phát trước</label>
+        <select id="playlistSelector" class="bg-gray-800 text-white p-3 rounded-lg w-full">
+          <option value="1">Playlist 1</option>
+          <option value="2">Playlist 2</option>
+        </select>
+      </div>
+      <div class="url-inputs">
+        <div>
+          <label for="customPlaylist1" class="block text-sm font-medium text-green-400 mb-2">URL Playlist 1</label>
+          <input type="text" id="customPlaylist1" class="bg-gray-800 text-white p-3 rounded-lg w-full" placeholder="Nhập URL Playlist 1">
+          <button onclick="updatePlaylist(1)" class="mt-2 bg-green-600 text-black px-4 py-2 rounded-lg text-sm font-bold w-full">Cập nhật Playlist 1</button>
+        </div>
+        <div>
+          <label for="customPlaylist2" class="block text-sm font-medium text-green-400 mb-2">URL Playlist 2</label>
+          <input type="text" id="customPlaylist2" class="bg-gray-800 text-white p-3 rounded-lg w-full" placeholder="Nhập URL Playlist 2">
+          <button onclick="updatePlaylist(2)" class="mt-2 bg-green-600 text-black px-4 py-2 rounded-lg text-sm font-bold w-full">Cập nhật Playlist 2</button>
+        </div>
+      </div>
+      <div class="playback-buttons">
+        <button onclick="playAudio()" class="bg-green-600 text-black px-4 py-2 rounded-lg text-sm font-bold">Phát</button>
+        <button onclick="pauseAudio()" class="bg-green-600 text-black px-4 py-2 rounded-lg text-sm font-bold">Tạm Dừng</button>
+        <button onclick="nextVideo()" class="bg-green-600 text-black px-4 py-2 rounded-lg text-sm font-bold">Bài Tiếp</button>
+        <button onclick="previousVideo()" class="bg-green-600 text-black px-4 py-2 rounded-lg text-sm font-bold">Bài Trước</button>
+      </div>
+      <div class="volume-control">
+        <label for="volume" class="block text-sm font-medium text-green-400 mb-2">Âm lượng (0-350%)</label>
+        <input type="range" id="volume" min="0" max="3.5" step="0.01" value="1" oninput="adjustVolume(this.value)" class="w-full">
+      </div>
+      <div id="progress1Container" class="progress-container">
+        <label for="progress1" class="block text-sm font-medium text-green-400 mb-2">Tiến trình (Playlist 1)</label>
+        <input type="range" id="progress1" min="0" max="100" value="0" oninput="seekTo(1, this.value)" class="w-full">
+        <div class="flex justify-between text-xs text-green-400 mt-2">
+          <span id="currentTime1">0:00</span>
+          <span id="duration1">0:00</span>
+        </div>
+      </div>
+      <div id="progress2Container" class="progress-container">
+        <label for="progress2" class="block text-sm font-medium text-green-400 mb-2">Tiến trình (Playlist 2)</label>
+        <input type="range" id="progress2" min="0" max="100" value="0" oninput="seekTo(2, this.value)" class="w-full">
+        <div class="flex justify-between text-xs text-green-400 mt-2">
+          <span id="currentTime2">0:00</span>
+          <span id="duration2">0:00</span>
+        </div>
+      </div>
     </div>
     <div class="video-container">
       <iframe
@@ -403,32 +485,6 @@
         allowfullscreen
         loading="lazy"
       ></iframe>
-    </div>
-    <div class="flex justify-center space-x-3 mb-3">
-      <button onclick="playAudio()" class="bg-green-600 text-black px-3 py-1.5 rounded-lg text-sm font-bold">Phát</button>
-      <button onclick="pauseAudio()" class="bg-green-600 text-black px-3 py-1.5 rounded-lg text-sm font-bold">Tạm Dừng</button>
-      <button onclick="nextVideo()" class="bg-green-600 text-black px-3 py-1.5 rounded-lg text-sm font-bold">Bài Tiếp</button>
-      <button onclick="previousVideo()" class="bg-green-600 text-black px-3 py-1.5 rounded-lg text-sm font-bold">Bài Trước</button>
-    </div>
-    <div class="mb-3">
-      <label for="volume" class="block text-sm font-medium text-green-400 mb-1">Âm lượng (0-200%)</label>
-      <input type="range" id="volume" min="0" max="2" step="0.01" value="1" oninput="adjustVolume(this.value)" class="w-full">
-    </div>
-    <div id="progress1Container" class="progress-container">
-      <label for="progress1" class="block text-sm font-medium text-green-400 mb-1">Tiến trình (Playlist 1)</label>
-      <input type="range" id="progress1" min="0" max="100" value="0" oninput="seekTo(1, this.value)" class="w-full">
-      <div class="flex justify-between text-xs text-green-400 mt-1">
-        <span id="currentTime1">0:00</span>
-        <span id="duration1">0:00</span>
-      </div>
-    </div>
-    <div id="progress2Container" class="progress-container">
-      <label for="progress2" class="block text-sm font-medium text-green-400 mb-1">Tiến trình (Playlist 2)</label>
-      <input type="range" id="progress2" min="0" max="100" value="0" oninput="seekTo(2, this.value)" class="w-full">
-      <div class="flex justify-between text-xs text-green-400 mt-1">
-        <span id="currentTime2">0:00</span>
-        <span id="duration2">0:00</span>
-      </div>
     </div>
   </div>
 
@@ -690,13 +746,17 @@
     }
 
     function adjustVolume(value) {
-      const youtubeVolume = Math.min(value * 50, 100);
-      const gainValue = value;
+      const youtubeVolume = Math.min(value * 100 / 3.5, 100); // Scale 0-3.5 to 0-100 for YouTube
+      const gainValue = Math.min(value, 3.5); // Cap gain at 3.5 to prevent excessive amplification
       if (player1 && player1.setVolume) player1.setVolume(youtubeVolume);
       if (player2 && player2.setVolume) player2.setVolume(youtubeVolume);
       if (audioContext) {
         if (gainNode1) gainNode1.gain.setValueAtTime(gainValue, audioContext.currentTime);
         if (gainNode2) gainNode2.gain.setValueAtTime(gainValue, audioContext.currentTime);
+      }
+      // Warn about potential distortion
+      if (value > 2) {
+        console.warn('Âm lượng trên 200% có thể gây méo tiếng. Vui lòng kiểm tra chất lượng âm thanh.');
       }
     }
 
