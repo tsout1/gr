@@ -2,100 +2,545 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phát Âm Thanh từ Playlist Timi EDM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <title>Playlist</title>
+  <link rel="icon" href="https://images-ext-1.discordapp.net/external/oY3IzCcrSLI8TfqjZf_TDPN5whbviE_PGqQqzJd2GYE/%3Fsize%3D4096/https/cdn.discordapp.com/avatars/1253726505402499203/6602147533b258ea90daf9b2c4a45176.png?format=webp&quality=lossless&width=476&height=476" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto+Mono&family=Orbitron:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Ẩn video, chỉ giữ âm thanh */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(45deg, #1e3c72, #2a5298, #6b48ff, #ff6f61);
+      background-size: 200%;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      position: relative;
+      animation: gradient 20s ease infinite;
+    }
+
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 90%;
+      padding: 20px;
+      margin: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      z-index: 1;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .container:hover {
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+    }
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: 600;
+    }
+
+    h2 {
+      font-size: 1.8em;
+      margin-top: 30px;
+    }
+
+    .code-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      margin: 8px 0;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      transition: transform 0.2s ease;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: slideIn 0.4s forwards;
+    }
+
+    .code-item:hover {
+      transform: translateY(-3px);
+    }
+
+    .code {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.2em;
+      color: #e0e0e0;
+    }
+
+    .star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5em;
+      color: #ccc;
+      transition: transform 0.2s ease;
+    }
+
+    .star-btn.copied {
+      color: transparent;
+      background: linear-gradient(45deg, #ffd700, #ff6f61);
+      background-clip: text;
+      -webkit-background-clip: text;
+      animation: sparkle 0.5s ease;
+    }
+
+    .star-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .star-btn:active {
+      transform: scale(0.9);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      font-size: 1em;
+      color: #ddd;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+
+    .footer span {
+      color: #ffd700;
+      font-weight: 600;
+    }
+
+    .footer span:hover {
+      text-shadow: 0 0 10px #ffd700;
+    }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(45deg, #ffd700, #ff6f61);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      font-size: 1em;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      z-index: 1000;
+    }
+
+    .copy-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-10px);
+    }
+
+    .player-container {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      max-width: 350px;
+      width: 90%;
+      padding: 15px;
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 0 15px #00ff00, 0 0 25px rgba(0, 255, 0, 0.5);
+      border: 1px solid #00ff00;
+      z-index: 1000;
+      display: none;
+      font-family: 'Orbitron', sans-serif;
+      transition: transform 0.3s ease;
+    }
+
+    .player-container.active {
+      display: block;
+      transform: translateY(0);
+    }
+
+    .player-container h3 {
+      color: #00ff00;
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 10px;
+      text-shadow: 0 0 8px #00ff00;
+    }
+
     .video-container {
       width: 0;
       height: 0;
       overflow: hidden;
     }
-    /* Tùy chỉnh thanh tiến trình và âm lượng */
+
     input[type="range"] {
       -webkit-appearance: none;
       width: 100%;
-      height: 8px;
-      background: #e5e7eb;
+      height: 10px;
+      background: #2d2d2d;
       border-radius: 5px;
       outline: none;
-      transition: background 0.3s;
+      box-shadow: 0 0 8px #00ff00;
+      transition: box-shadow 0.2s;
     }
+
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 16px;
-      height: 16px;
-      background: #3b82f6;
+      width: 20px;
+      height: 20px;
+      background: #00ff00;
       border-radius: 50%;
       cursor: pointer;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 10px #00ff00;
+      transition: transform 0.2s;
     }
+
     input[type="range"]::-webkit-slider-thumb:hover {
-      background: #2563eb;
+      transform: scale(1.1);
+      box-shadow: 0 0 12px #00ff00, 0 0 20px rgba(0, 255, 0, 0.5);
+    }
+
+    button {
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 8px #00ff00;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 12px #00ff00;
+    }
+
+    .toggle-player-btn {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      width: 50px;
+      height: 50px;
+      background: url('https://images-ext-1.discordapp.net/external/oY3IzCcrSLI8TfqjZf_TDPN5whbviE_PGqQqzJd2GYE/%3Fsize%3D4096/https/cdn.discordapp.com/avatars/1253726505402499203/6602147533b258ea90daf9b2c4a45176.png?format=webp&quality=lossless&width=476&height=476') no-repeat center;
+      background-size: cover;
+      border-radius: 50%;
+      border: 1px solid #00ff00;
+      box-shadow: 0 0 10px #00ff00;
+      cursor: pointer;
+      z-index: 1001;
+      transition: transform 0.2s;
+    }
+
+    .toggle-player-btn:hover {
+      transform: scale(1.2);
+    }
+
+    .toggle-player-btn:active {
+      transform: scale(0.9);
+    }
+
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes sparkle {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.5); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        margin: 10px;
+        padding: 15px;
+      }
+      h1 {
+        font-size: 2em;
+      }
+      h2 {
+        font-size: 1.5em;
+      }
+      .code {
+        font-size: 1em;
+      }
+      .star-btn {
+        font-size: 1.3em;
+      }
+      .footer {
+        font-size: 0.8em;
+      }
+      .copy-toast {
+        padding: 8px 15px;
+        font-size: 0.9em;
+      }
+      .player-container {
+        max-width: 280px;
+        padding: 10px;
+      }
+      .player-container h3 {
+        font-size: 1.2em;
+      }
+      .toggle-player-btn {
+        width: 40px;
+        height: 40px;
+      }
+      button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+      }
     }
   </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen" oncontextmenu="return false;">
-  <div class="player bg-white p-6 rounded-xl shadow-2xl max-w-md w-full">
-    <h1 class="text-2xl font-bold text-gray-800 mb-4 text-center">Phát Âm Thanh từ Playlist Timi EDM</h1>
+<body oncontextmenu="return false;">
+  <div id="particles-js"></div>
+  <div class="container">
+    <h1>Mã dự phòng reisurk</h1>
+    <div id="backupCodeList"></div>
+    <h2>Mã dự phòng reisurrk</h2>
+    <div id="mainAccCodeList"></div>
+    <div class="footer"><span>© by khoi</span></div>
+  </div>
+  <div id="copyToast" class="copy-toast">Đã sao chép mã!</div>
+  <div class="toggle-player-btn" id="togglePlayerBtn"></div>
+  <div class="player-container" id="playerContainer">
+    <h3>Playlist</h3>
     <div class="video-container">
       <iframe
-        id="youtubePlayer"
-        src="https://www.youtube.com/embed/videoseries?list=RDvgDGRHSEWls&enablejsapi=1"
+        id="youtubePlayer1"
+        data-src="https://www.youtube.com/embed/videoseries?list=RDvgDGRHSEWls&enablejsapi=1"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowfullscreen
+        loading="lazy"
+      ></iframe>
+      <iframe
+        id="youtubePlayer2"
+        data-src="https://www.youtube.com/embed/videoseries?list=RDgze7WfLyxfE&enablejsapi=1"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
       ></iframe>
     </div>
-    <div class="flex justify-center space-x-4 mb-4">
-      <button onclick="playAudio()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Phát</button>
-      <button onclick="pauseAudio()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Tạm Dừng</button>
-      <button onclick="nextVideo()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Bài Tiếp</button>
-      <button onclick="previousVideo()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200">Bài Trước</button>
+    <div class="flex justify-center space-x-3 mb-3">
+      <button onclick="playAudio()" class="bg-green-600 text-black px-3 py-1.5 rounded-lg text-sm font-bold">Phát</button>
+      <button onclick="pauseAudio()" class="bg-green-600 text-black px-3 py-1.5 rounded-lg text-sm font-bold">Tạm Dừng</button>
+      <button onclick="nextVideo()" class="bg-green-600 text-black px-3 py-1.5 rounded-lg text-sm font-bold">Bài Tiếp</button>
+      <button onclick="previousVideo()" class="bg-green-600 text-black px-3 py-1.5 rounded-lg text-sm font-bold">Bài Trước</button>
     </div>
-    <div class="mb-4">
-      <label for="volume" class="block text-sm font-medium text-gray-700">Âm lượng</label>
+    <div class="mb-3">
+      <label for="volume" class="block text-sm font-medium text-green-400 mb-1">Âm lượng</label>
       <input type="range" id="volume" min="0" max="1" step="0.1" value="1" oninput="adjustVolume(this.value)" class="w-full">
     </div>
     <div>
-      <label for="progress" class="block text-sm font-medium text-gray-700">Tiến trình</label>
-      <input type="range" id="progress" min="0" max="100" value="0" oninput="seekTo(this.value)" class="w-full">
-      <div class="flex justify-between text-sm text-gray-600 mt-1">
-        <span id="currentTime">0:00</span>
-        <span id="duration">0:00</span>
+      <label for="progress2" class="block text-sm font-medium text-green-400 mb-1">Tiến trình (Playlist 2)</label>
+      <input type="range" id="progress2" min="0" max="100" value="0" oninput="seekTo(2, this.value)" class="w-full">
+      <div class="flex justify-between text-xs text-green-400 mt-1">
+        <span id="currentTime2">0:00</span>
+        <span id="duration2">0:00</span>
+      </div>
+    </div>
+    <div>
+      <label for="progress1" class="block text-sm font-medium text-green-400 mb-1">Tiến trình (Playlist 1)</label>
+      <input type="range" id="progress1" min="0" max="100" value="0" oninput="seekTo(1, this.value)" class="w-full">
+      <div class="flex justify-between text-xs text-green-400 mt-1">
+        <span id="currentTime1">0:00</span>
+        <span id="duration1">0:00</span>
       </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script>
-    // Tải YouTube IFrame Player API
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    // Tối ưu particles.js
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 60, density: { enable: true, value_area: 1000 } },
+        color: { value: ['#ffffff', '#ffd700', '#ff6f61'] },
+        shape: { type: 'circle' },
+        opacity: { value: 0.5, random: true },
+        size: { value: 3, random: true },
+        line_linked: { enable: false },
+        move: { enable: true, speed: 2, direction: 'none', random: true }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: { onhover: { enable: false }, onclick: { enable: false } }
+      },
+      retina_detect: true
+    });
 
-    var player;
-    var duration = 0;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('youtubePlayer', {
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
+    // Danh sách mã
+    const backupCodes = [
+      'kiệt',
+      'g',
+      'a',
+      'y:))',
+      'jzsbpwlrd',
+      'tyfa2zfq6',
+      '84q50lvq7',
+      '49g9fub9d',
+      '5kdvjw34b',
+      '83elaggkc'
+    ];
+
+    const mainAccCodes = [
+      'l85omgozy',
+      'hdqj1s0p9',
+      '9rqi4uitj',
+      't8i2ph9kw',
+      'td5zpk7zg',
+      'f951dvnkd',
+      '0gevv1chw',
+      '0sg87x730',
+      'wh2sf6482',
+      'hu5z34g17'
+    ];
+
+    function renderCodeList(containerId, codeList) {
+      const codeListContainer = document.getElementById(containerId);
+      codeListContainer.innerHTML = '';
+      codeList.forEach((code, index) => {
+        const div = document.createElement('div');
+        div.className = 'code-item';
+        div.style.animationDelay = `${index * 0.1}s`;
+        div.innerHTML = `
+          <span class="code">${code}</span>
+          <button class="star-btn" data-code="${code}" title="Sao chép mã">
+            <i class="fas fa-star"></i>
+          </button>
+        `;
+        codeListContainer.appendChild(div);
       });
     }
 
-    function onPlayerReady(event) {
-      player.setVolume(100);
-      duration = player.getDuration();
-      document.getElementById('duration').textContent = formatTime(duration);
-      console.log("Trình phát YouTube đã sẵn sàng.");
-      setInterval(updateProgress, 1000);
-      setInterval(logPlayerInfo, 1000);
+    // Hàm sao chép mã và hiển thị thông báo
+    function copyCode(code) {
+      navigator.clipboard.writeText(code).then(() => {
+        const toast = document.getElementById('copyToast');
+        toast.textContent = `Đã sao chép: ${code}`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+        const button = document.querySelector(`.star-btn[data-code="${code}"]`);
+        button.classList.add('copied');
+        setTimeout(() => button.classList.remove('copied'), 800);
+        if (window.innerWidth > 600) {
+          launchConfetti();
+        }
+      }).catch(() => {
+        alert('Lỗi khi sao chép mã!');
+      });
     }
 
-    function onPlayerStateChange(event) {
+    // Hàm chạy hiệu ứng confetti
+    function launchConfetti() {
+      import('https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js').then((module) => {
+        module.default({
+          particleCount: 80,
+          spread: 60,
+          origin: { y: 0.5 },
+          colors: ['#ffd700', '#ff6f61'],
+          scalar: 1,
+          gravity: 0.4,
+          ticks: 150
+        });
+      });
+    }
+
+    // Thêm sự kiện click cho nút sao
+    document.addEventListener('click', (event) => {
+      if (event.target.closest('.star-btn')) {
+        const code = event.target.closest('.star-btn').dataset.code;
+        copyCode(code);
+      }
+    });
+
+    // Khởi tạo danh sách mã
+    renderCodeList('backupCodeList', backupCodes);
+    renderCodeList('mainAccCodeList', mainAccCodes);
+
+    // Tải YouTube IFrame Player API
+    let youtubeApiLoaded = false;
+    let player1, player2;
+    let duration1 = 0, duration2 = 0;
+
+    function loadYouTubePlayer() {
+      if (!youtubeApiLoaded) {
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        youtubeApiLoaded = true;
+      }
+    }
+
+    window.onYouTubeIframeAPIReady = function() {
+      player1 = new YT.Player('youtubePlayer1', {
+        events: {
+          'onReady': (event) => onPlayerReady(event, 1),
+          'onStateChange': (event) => onPlayerStateChange(event, 1)
+        }
+      });
+      player2 = new YT.Player('youtubePlayer2', {
+        events: {
+          'onReady': (event) => onPlayerReady(event, 2),
+          'onStateChange': (event) => onPlayerStateChange(event, 2)
+        }
+      });
+    };
+
+    function onPlayerReady(event, playerId) {
+      if (!event.target) return;
+      const player = playerId === 1 ? player1 : player2;
+      player.setVolume(100);
+      if (playerId === 2) {
+        player.playVideo(); // Phát playlist 2 trước
+      }
+      const duration = player.getDuration();
+      if (playerId === 1) {
+        duration1 = duration;
+        document.getElementById('duration1').textContent = formatTime(duration);
+      } else {
+        duration2 = duration;
+        document.getElementById('duration2').textContent = formatTime(duration);
+      }
+      console.log(`Trình phát ${playerId} đã sẵn sàng.`);
+      setInterval(() => updateProgress(playerId), 2000);
+      setInterval(() => logPlayerInfo(playerId), 2000);
+    }
+
+    function onPlayerStateChange(event, playerId) {
       const states = {
         '-1': 'Chưa bắt đầu',
         0: 'Kết thúc',
@@ -104,44 +549,63 @@
         3: 'Đang đệm',
         5: 'Video được cued'
       };
-      console.log("Trạng thái trình phát: ", states[event.data]);
-      console.log("Thời gian hiện tại: ", player.getCurrentTime().toFixed(2), "giây");
-      // Cập nhật thời lượng khi video mới trong playlist được tải
+      const player = playerId === 1 ? player1 : player2;
+      console.log(`Trạng thái trình phát ${playerId}: ${states[event.data]}`);
+      console.log(`Thời gian hiện tại (Player ${playerId}): ${player.getCurrentTime().toFixed(2)} giây`);
       if (event.data === 1 || event.data === 3) {
-        duration = player.getDuration();
-        document.getElementById('duration').textContent = formatTime(duration);
+        const duration = player.getDuration();
+        if (playerId === 1) {
+          duration1 = duration;
+          document.getElementById('duration1').textContent = formatTime(duration);
+        } else {
+          duration2 = duration;
+          document.getElementById('duration2').textContent = formatTime(duration);
+        }
       }
     }
 
     function playAudio() {
-      player.playVideo();
+      if (player1 && player1.playVideo) player1.playVideo();
+      if (player2 && player2.playVideo) player2.playVideo();
     }
 
     function pauseAudio() {
-      player.pauseVideo();
+      if (player1 && player1.pauseVideo) player1.pauseVideo();
+      if (player2 && player2.pauseVideo) player2.pauseVideo();
     }
 
     function nextVideo() {
-      player.nextVideo();
+      if (player1 && player1.nextVideo) player1.nextVideo();
+      if (player2 && player2.nextVideo) player2.nextVideo();
     }
 
     function previousVideo() {
-      player.previousVideo();
+      if (player1 && player1.previousVideo) player1.previousVideo();
+      if (player2 && player2.previousVideo) player2.previousVideo();
     }
 
     function adjustVolume(value) {
-      player.setVolume(value * 100);
+      if (player1 && player1.setVolume) player1.setVolume(value * 100);
+      if (player2 && player2.setVolume) player2.setVolume(value * 100);
     }
 
-    function seekTo(value) {
-      const seconds = (value / 100) * duration;
-      player.seekTo(seconds, true);
+    function seekTo(playerId, value) {
+      const player = playerId === 1 ? player1 : player2;
+      const duration = playerId === 1 ? duration1 : duration2;
+      if (player && player.seekTo) {
+        const seconds = (value / 100) * duration;
+        player.seekTo(seconds, true);
+      }
     }
 
-    function updateProgress() {
-      const currentTime = player.getCurrentTime();
-      document.getElementById('currentTime').textContent = formatTime(currentTime);
-      document.getElementById('progress').value = duration ? (currentTime / duration) * 100 : 0;
+    function updateProgress(playerId) {
+      const player = playerId === 1 ? player1 : player2;
+      const duration = playerId === 1 ? duration1 : duration2;
+      if (player && player.getCurrentTime) {
+        const currentTime = player.getCurrentTime();
+        document.getElementById(`currentTime${playerId}`).textContent = formatTime(currentTime);
+        document.getElementById(`progress${playerId}`).value = duration ? (currentTime / duration) * 100 : 0;
+      }
     }
 
     function formatTime(seconds) {
@@ -150,18 +614,34 @@
       return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
     }
 
-    function logPlayerInfo() {
-      console.log("Thông tin video:");
-      console.log("Tiêu đề: Timi EDM (dựa trên tài liệu)");
-      console.log("URL: https://www.youtube.com/watch?v=vgDGRHSEWls (hoặc video hiện tại trong playlist)");
-      console.log("Thời lượng: ", player.getDuration().toFixed(2), "giây");
-      console.log("Thời gian hiện tại: ", player.getCurrentTime().toFixed(2), "giây");
-      console.log("Âm lượng: ", player.getVolume());
-      console.log("Trạng thái: ", player.getPlayerState());
+    function logPlayerInfo(playerId) {
+      const player = playerId === 1 ? player1 : player2;
+      if (player && player.getDuration) {
+        console.log(`Thông tin video (Player ${playerId}):`);
+        console.log(`Tiêu đề: Playlist ${playerId}`);
+        console.log(`URL: ${playerId === 1 ? 'https://www.youtube.com/watch?v=vgDGRHSEWls' : 'https://www.youtube.com/watch?v=gze7WfLyxfE'} (hoặc video hiện tại trong playlist)`);
+        console.log(`Thời lượng: ${player.getDuration().toFixed(2)} giây`);
+        console.log(`Thời gian hiện tại: ${player.getCurrentTime().toFixed(2)} giây`);
+        console.log(`Âm lượng: ${player.getVolume()}`);
+        console.log(`Trạng thái: ${player.getPlayerState()}`);
+      }
     }
 
+    // Bật/tắt trình phát
+    document.getElementById('togglePlayerBtn').addEventListener('click', () => {
+      const playerContainer = document.getElementById('playerContainer');
+      if (!playerContainer.classList.contains('active') && !youtubeApiLoaded) {
+        const iframe1 = document.getElementById('youtubePlayer1');
+        const iframe2 = document.getElementById('youtubePlayer2');
+        iframe1.src = iframe1.dataset.src;
+        iframe2.src = iframe2.dataset.src;
+        loadYouTubePlayer();
+      }
+      playerContainer.classList.toggle('active');
+    });
+
     // Chặn phím Ctrl+U, F12, Ctrl+Shift+I
-    document.addEventListener('keydown', function(event) {
+    document.addEventListener('keydown', (event) => {
       if (event.ctrlKey && event.key === 'u') {
         event.preventDefault();
         console.log("Đã chặn Ctrl+U");
@@ -173,7 +653,7 @@
     });
 
     // Chặn chuột phải
-    document.addEventListener('contextmenu', function(event) {
+    document.addEventListener('contextmenu', (event) => {
       event.preventDefault();
       console.log("Đã chặn chuột phải");
     });
